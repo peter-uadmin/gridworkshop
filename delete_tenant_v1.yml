@@ -1,0 +1,27 @@
+---
+- name: Delete NetApp StorageGRID tenant account
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+  vars_files:
+    ./global_vars.yml
+
+  vars_prompt:
+    - name: tenant_name
+      prompt: "enter tenant name"
+      default: "default"
+      private: no
+
+  roles:
+    - grid_auth
+
+  tasks:
+    - name: delete
+      netapp.storagegrid.na_sg_grid_account:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        state: absent
+        name: "{{ tenant_name }}"
+        protocol: "s3"

@@ -1,0 +1,39 @@
+---
+- name: Delete StorageGRID Bucket
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - netapp.storagegrid
+  vars_files:
+    global_vars.yml
+  roles:
+    - tenant_auth
+  vars_prompt:
+    - name: tenant_id
+      prompt: "enter tenant id"
+      default: "default"
+      private: no
+
+    - name: grid_username 
+      prompt: "enter user name"
+      default: "default"
+      private: no
+
+    - name: grid_password 
+      prompt: "enter password "
+      default: "default"
+      private: yes
+
+    - name: bucket_name
+      prompt: "enter bucket name"
+      default: "default"
+      private: no
+  tasks:
+    - name: Delete S3 Bucket
+      netapp.storagegrid.na_sg_org_container:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ auth.json.data }}"
+        validate_certs: false
+        state: absent 
+        name: "{{ bucket_name }}"
+        region: us-east-1
