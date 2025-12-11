@@ -1,0 +1,14 @@
+#This role sets the bearer_token for tenant_authorization
+---
+- name: Get Grid Authorization Token
+  uri:
+    url: "https://192.168.4.230:443/api/v3/authorize"
+    method: POST
+    body: '{"accountId": "{{ tenant_id }}", 
+            "username": "root", 
+            "password": "br@@mspun111"}'
+    body_format: json
+    validate_certs: false
+    status_code: [200]
+  register: auth
+-  

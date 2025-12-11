@@ -1,0 +1,18 @@
+#This role sets the bearer_token for grid_authorization
+---
+- name: Get Grid  Authorization Token
+  uri:
+    url: "{{ grid_endpoint }}/api/v3/authorize"
+    method: POST
+    body_format: json
+    body:
+      username: "{{ grid_username }}"
+      password: "{{ grid_password }}"
+    status_code: 200
+    validate_certs: false
+  register: auth
+
+- name: Set bearer token fact
+  set_fact:
+    bearer_token: "{{ auth.json.data }}"
+  when: auth.json.data is defined

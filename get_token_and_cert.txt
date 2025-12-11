@@ -1,0 +1,24 @@
+#to work with a selfsigned cert.
+
+1. Configuration - Security - Certificates - Global - Management interface certificate
+2. Select "Use default certificate" apply and save.
+
+3. On linux download this grid certificate:
+   echo | openssl s_client -connect 192.168.4.230:443 -showcerts 2>/dev/null \
+   | sed -n '/BEGIN CERTIFICATE/,/END CERTIFICATE/p' > sgrid-admin.pem
+
+4. generate a token:
+   curl -s -k -X POST "https://192.168.4.230:443/api/v3/authorize" \
+   -H "accept: application/json" \
+   -H "Content-Type: application/json" \
+   -d '{"username": "root", "password": "br@@mspun111"}'|jq -r '.data' 
+   
+   Output will be like: 1b6f46a4-2372-4686-95ad-6f5484ee642a
+   This is the token to use in the curl command.
+
+5. List accounts using the certificate
+   curl --cacert sgrid-admin.pem \
+   -H "accept: application/json" \
+   -H "Authorization: Bearer 1b6f46a4-2372-4686-95ad-6f5484ee642a" \
+   "https://192.168.4.230:443/api/v3/grid/accounts"
+

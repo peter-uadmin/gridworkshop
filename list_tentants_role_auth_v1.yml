@@ -1,0 +1,32 @@
+---
+- name: List StorageGRID tenants
+  hosts: localhost
+  gather_facts: false
+  vars:
+  vars_files:
+    global_vars.yml
+  roles:
+    - grid_auth
+  tasks:
+    - name: Get list of tenants from StorageGRID
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/grid/accounts"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ bearer_token }}"
+          Accept: "application/json"
+        validate_certs: false
+      register: tenants
+
+ #   - name: Display tenants JSON
+ #     debug:
+ #       var: tenants.json
+
+    - name: Display each tenant's name and id
+      debug:
+        msg: "Tenant {{ item.name }} (ID: {{ item.id }})"
+      loop: "{{ tenants.json.data }}"
+      loop_control: #loop_control prints only the two items in msg:
+        label: "{{ item.name }}"
+
+

@@ -1,0 +1,46 @@
+#this playbook will list all tenants' data
+---
+- name: List StorageGRID tenants
+  hosts: localhost
+  gather_facts: false
+  vars:
+    admin_node_ip: "192.168.4.230"
+    storagegrid_username: "root"
+    storagegrid_password: "br@@mspun111"
+
+  tasks:
+    - name: Get bearer token from StorageGRID
+      uri:
+        url: "https://{{ admin_node_ip }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          username: "{{ storagegrid_username }}"
+          password: "{{ storagegrid_password }}"
+        status_code: 200
+        validate_certs: false
+      register: token_response
+
+    - name: Debug token response
+      debug:
+        var: token_response.json
+
+    - name: Set bearer token fact
+      set_fact:
+        bearer_token: "{{ token_response.json.data }}"
+      when: token_response.json.data is defined
+
+    - name: Get list of tenants from StorageGRID
+      uri:
+        url: "https://{{ admin_node_ip }}/api/v3/grid/accounts"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ bearer_token }}"
+          Accept: "application/json"
+        validate_certs: false
+      register: tenant_response
+
+    - name: List only tenantname and accountid
+      debug:
+      loop: "{{ tenant_response.json.data }}"
+

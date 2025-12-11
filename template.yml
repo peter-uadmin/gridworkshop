@@ -1,0 +1,79 @@
+---
+- name: StorageGRID configuration example
+  hosts: localhost
+  gather_facts: false
+
+  collections:
+    - netapp.storagegrid
+
+  vars:
+    sg_api_url: "https://sg-admin.example.com"
+    sg_username: "root"
+    sg_password: "{{ vault_sg_password }}"   # define in vault / extra-vars
+    sg_validate_certs: false
+
+    sg_tenant_name: "demo-tenant"
+    sg_tenant_protocol: "s3"
+    sg_tenant_quota: 0              # 0 = unlimited
+    sg_user_name: "demo-user"
+    sg_bucket_name: "demo-bucket"
+
+  tasks:
+
+    - name: Gather StorageGRID grid info
+    - name: Gather StorageGRID grid info
+      netapp.storagegrid.na_sg_grid_info:
+        api_url: "{{ sg_api_url }}"
+        username: "{{ sg_username }}"
+        password: "{{ sg_password }}"
+        validate_certs: "{{ sg_validate_certs }}"
+      register: sg_grid_info
+
+    - name: Create or update tenant account
+      netapp.storagegrid.na_sg_grid_account:
+        api_url: "{{ sg_api_url }}"
+        username: "{{ sg_username }}"
+        password: "{{ sg_password }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        name: "{{ sg_tenant_name }}"
+        protocol: "{{ sg_tenant_protocol }}"
+        state: present
+        quota_size: "{{ sg_tenant_quota }}"
+      register: sg_tenant
+
+    - name: Create tenant user
+      netapp.storagegrid.na_sg_org_user:
+        api_url: "{{ sg_api_url }}"
+        username: "{{ sg_tenant.output.username | default('root') }}"
+        password: "{{ sg_tenant.output.password | default('tenant_pass') }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        tenant_id: "{{ sg_tenant.account_id }}"
+        full_name: "{{ sg_user_name }}"
+        unique_name: "{{ sg_user_name }}"
+        member_of:
+          - "group/Administrators"
+        state: present
+      register: sg_user
+
+    - name: Create S3 access key for tenant user
+      netapp.storagegrid.na_sg_org_user_s3_key:
+        api_url: "{{ sg_api_url }}"
+        username: "{{ sg_tenant.output.username | default('root') }}"
+        password: "{{ sg_tenant.output.password | default('tenant_pass') }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        tenant_id: "{{ sg_tenant.account_id }}"
+        user_id: "{{ sg_user.user_id }}"
+        state: present
+      register: sg_s3_keys
+
+    - name: Create S3 bucket
+      netapp.storagegrid.na_sg_org_container:
+        api_url: "{{ sg_api_url }}"
+        username: "{{ sg_tenant.output.username | default('root') }}"
+        password: "{{ sg_tenant.output.password | default('tenant_pass') }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        tenant_id: "{{ sg_tenant.account_id }}"
+        name: "{{ sg_bucket_name }}"
+        state: present
+  # add tags/ILM/identity federation/etc as needed
+

@@ -1,0 +1,46 @@
+---
+- name: List StorageGRID tenants (name & id only)
+  hosts: localhost
+  gather_facts: false
+  vars:
+  vars_files:
+    - global_vars.yml
+
+  tasks:
+    - name: Get bearer token from StorageGRID
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          username: "{{ grid_username }}"
+          password: "{{ grid_password }}"
+        status_code: 200
+        validate_certs: false
+      register: token_response
+
+    - name: Set bearer token fact
+      set_fact:
+        bearer_token: "{{ token_response.json.data }}"
+      when: token_response.json.data is defined
+
+    - name: Get list of tenants from StorageGRID
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/grid/accounts"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ bearer_token }}"
+          Accept: "application/json"
+        client_cert: "/root/ansible/ansible_storagegrid/sg-client-cert.pem"
+        client_key: "/root/ansible/ansible_storagegrid/sg-client-key.pem"
+        validate_certs: false
+      register: tenant_response
+
+    - name: Print tenant name and ID
+      debug:
+        msg:
+          - "Tenant Name: {{ item.name }}"
+          - "Tenant ID: {{ item.id }}"
+      loop: "{{ tenant_response.json.data }}"
+      loop_control:
+        label: "{{ item.name | default('unknown') }}"
