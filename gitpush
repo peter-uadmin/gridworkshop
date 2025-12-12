@@ -1,0 +1,10 @@
+echo "adding $1"
+git add $1
+
+echo "commit"
+git commit -m "$1"
+
+echo "push $1"
+git push origin main
+
+
