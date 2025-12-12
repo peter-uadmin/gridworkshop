@@ -1,21 +1,18 @@
 #first get a bearer token for the root user of the tenant.
-ADDR=192.168.4.230          # Admin node / LB
+
+#set variables
+ADDR=192.168.4.230                  # Admin node / LB
 TENANT_ID=06720005734697258898      # tenant account ID
-USER="root"                 # tenant admin/root user
-PASS='br@@mspun111'
+USER="root"                         # tenant admin/root user
+PASS="br@@mspun111"		    # tenant password
 
-curl -k -X POST "https://${ADDR}/api/v3/authorize" \
-  -H "Content-Type: application/json" \
-  -d "{
-        \"accountId\": \"${TENANT_ID}\",
-        \"username\": \"${USER}\",
-        \"password\": \"${PASS}\"
-      }"
+#get bearer token
+curl -k -X POST "https://${ADDR}/api/v3/authorize" -H "Content-Type: application/json"  -d "{ \"accountId\": \"${TENANT_ID}\", \"username\": \"${USER}\", \"password\": \"${PASS}\" }"
 
-#then get the unique user id of the user for which you want the access_keys
+#list users and select target-user
 curl -k -X GET "https://192.168.4.230/api/v4/org/users" -H "Authorization: Bearer d999dd39-7c8c-4f9b-bc88-04b28cdeec93" -H "Content-Type: application/json"
 
-#find the "id=......." for the user and use that to get the access keys.
+#create and get the user's access keys
 curl -k -X POST   "https://192.168.4.230/api/v4/org/users/2cdae75b-8041-432b-b758-2b129515b695/s3-access-keys"   -H "Authorization: Bearer d999dd39-7c8c-4f9b-bc88-04b28cdeec93"   -H "Content-Type: application/json"   -d '{}'
 
 #add the keys to ~/.aws/credentials under a new profile
