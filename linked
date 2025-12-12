@@ -1,0 +1,4 @@
+#get token and cert
+get_token_and_cert.txt
+sgrid-adm.pem
+get_token_certs_true.yml 
