@@ -14,4 +14,7 @@ delete_tenant_v2.yml
 
 #buckets
 create_bucket_auth.ym
+create_access_keys.yml
+delete_bucket_role.yml  
+delete_bucket.yml
 
