@@ -1,3 +1,4 @@
+#based upon curl script
 ---
 - name: Create S3 access keys for a tenant user
   hosts: localhost
