@@ -1,0 +1,90 @@
+---
+- name: Create S3 access keys for a tenant user
+  hosts: localhost
+  gather_facts: false
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "Enter tenant ID"
+      private: no
+    - name: tenant_root_password
+      prompt: "Enter tenant root password"
+      private: yes
+
+  vars:
+    grid_addr: "192.168.4.230"
+    tenant_root_user: "root"
+
+  tasks:
+    - name: Get tenant bearer token
+      ansible.builtin.uri:
+        url: "https://{{ grid_addr }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          accountId: "{{ tenant_id }}"
+          username: "{{ tenant_root_user }}"
+          password: "{{ tenant_root_password }}"
+        headers:
+          Content-Type: "application/json"
+        validate_certs: false        # use ca_path when you wire in your PEM
+        status_code: 200
+      register: auth
+
+    - name: Extract bearer token
+      ansible.builtin.set_fact:
+        tenant_token: "{{ auth.json.data }}"
+
+    - name: List tenant users
+      ansible.builtin.uri:
+        url: "https://{{ grid_addr }}/api/v4/org/users"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ tenant_token }}"
+          Content-Type: "application/json"
+        validate_certs: false
+        status_code: 200
+      register: users
+    - name: Show raw users JSON
+      ansible.builtin.debug:
+        var: users.json
+
+    - name: Show users and IDs (simple)
+      ansible.builtin.debug:
+        msg: >-
+          {{
+            users.json.data
+            | map(attribute='id')
+            | list
+          }}
+
+
+    - name: Ask for target user ID
+      ansible.builtin.pause:
+        prompt: "Enter the user ID (UUID) for which to create S3 access keys (see list above)"
+      register: target_user_input
+
+    - name: Set target user ID fact
+      ansible.builtin.set_fact:
+        target_user_id: "{{ target_user_input.user_input }}"
+
+    - name: Create S3 access keys for user
+      ansible.builtin.uri:
+        url: "https://{{ grid_addr }}/api/v4/org/users/{{ target_user_id }}/s3-access-keys"
+        method: POST
+        body_format: json
+        body: {}
+        headers:
+          Authorization: "Bearer {{ tenant_token }}"
+          Content-Type: "application/json"
+        validate_certs: false
+        status_code: 201
+      register: s3_keys
+
+    - name: Display created S3 keys
+      ansible.builtin.debug:
+        msg:
+          access_key: "{{ s3_keys.json.data.accessKey | default(s3_keys.json.accessKey) }}"
+          secret_access_key: "{{ s3_keys.json.data.secretAccessKey | default(s3_keys.json.secretAccessKey) }}"
+          raw_response: "{{ s3_keys.json }}"
+
