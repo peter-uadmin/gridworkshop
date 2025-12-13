@@ -1,0 +1,32 @@
+echo update
+dnf update -y
+
+echo install python3.11
+dnf install -y python3.11 python3.11-pip
+
+echo venv
+python3.11 -m venv ansible_venv
+source ansible_venv/bin/activate
+echo "source ansible_venv/bin/activate" >> ~/.bashrc
+
+echo "continue"
+read
+echo install ansible and netapp
+pip install ansible requests requests-toolbelt marshmallow
+pip install netapp-ontap
+pip install netapp-lib
+
+echo botocore
+pip install boto3 botocore #this is for sgrid 
+
+echo python3.12
+dnf install -y python3.12-pip
+chmod -R +x /root/ansible_venv/lib/python3.11/site-packages/ansible/collections
+pip install oslo_log
+
+echo git
+dnf install -y git
+git clone https://github.com/peter-uadmin/ansible_storagegrid.git 
+echo "ANSIBLE_CONFIG=/root/gridworkshop/ansible.cfg" >> ~/.bashrc
+echo "alias play=/root/ansible_venv/bin/ansible-playbook" >> ~/.bashrc
+source ~/.bashrc
