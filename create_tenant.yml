@@ -1,0 +1,64 @@
+---
+- name: Create StorageGRID tenant (minimal)
+  hosts: localhost
+  gather_facts: false
+
+  vars_prompt:
+    - name: grid_addr
+      prompt: "Grid admin address"
+      default: "192.168.4.230"
+      private: no
+    - name: grid_user
+      prompt: "Grid admin username"
+      default: "root"
+      private: no
+    - name: grid_pass
+      prompt: "Grid admin password"
+      private: yes
+    - name: tenant_name
+      prompt: "Tenant name"
+      private: no
+    - name: tenant_root_pass
+      prompt: "Tenant root password"
+      private: yes
+
+  tasks:
+    - name: Get grid admin token
+      ansible.builtin.uri:
+        url: "https://{{ grid_addr }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          username: "{{ grid_user }}"
+          password: "{{ grid_pass }}"
+          cookie: false
+          csrfToken: false
+        headers:
+          Content-Type: "application/json"
+        validate_certs: false
+        status_code: 200
+      register: auth
+
+    - name: Set grid token
+      ansible.builtin.set_fact:
+        grid_token: "{{ auth.json.data }}"
+
+    - name: Create tenant
+      ansible.builtin.uri:
+        url: "https://{{ grid_addr }}/api/v3/grid/accounts"
+        method: POST
+        body_format: json
+        body:
+          name: "{{ tenant_name }}"
+          password: "{{ tenant_root_pass }}"
+        headers:
+          Authorization: "Bearer {{ grid_token }}"
+          Content-Type: "application/json"
+        validate_certs: false
+        status_code: 201
+      register: tenant
+
+    - name: Show tenant creation result
+      ansible.builtin.debug:
+        var: tenant.json
+
