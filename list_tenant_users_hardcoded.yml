@@ -1,0 +1,49 @@
+#all hardcoded. change this
+---
+- name: Get Tenant Auth Token
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - netapp.storagegrid
+#
+#define endpoint, user, pass and tenantid
+#
+  vars:
+    grid_api_url: "https://192.168.4.230:443"
+    tenant_id: "06959856192431261086"
+    tenant_username: "root"  
+    tenant_password: "br@@mspun111"  
+  vars_prompt:
+    - name: tenant_id 
+      prompt: "enter accountid"
+      default: "default"
+      private: no
+#
+#connect to endpoint ans use /api/v3/authorize
+#    
+  tasks:
+    - name: Get Tenant Authorization Token
+      uri:
+        url: "{{ grid_api_url }}/api/v3/authorize"
+        method: POST
+        body: '{"accountId": "{{ tenant_id }}", "username": "{{ tenant_username }}", "password": "{{ tenant_password }}"}'
+        body_format: json
+        validate_certs: false
+        status_code: [200]
+      register: auth
+#
+#the authtoken can be processes as auth.json.data (variable)
+#
+    - name: List StorageGRID Users
+      uri:
+        url: "{{ grid_api_url }}/api/v3/org/users"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ auth.json.data }}"
+        validate_certs: false
+        status_code: [200]
+      register: sg_users
+
+    - name: Print Users
+      ansible.builtin.debug:
+        var: sg_users.json.data 
