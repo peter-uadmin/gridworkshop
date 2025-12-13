@@ -1,0 +1,38 @@
+#gets root authtoken in playbook and creates tenant
+#does not user a role to get the authtoken
+---
+- name: Create StorageGRID Tenant
+  hosts: localhost
+  gather_facts: no
+  
+  collections:
+    - netapp.storagegrid
+
+  tasks:
+    - name: Get Grid Authorization Token
+      uri:
+        url: "https://192.168.4.230:443/api/v3/authorize"
+        method: POST
+        body: {
+          "username": "root",
+          "password": "br@@mspun111",
+          "cookie": false,
+          "csrfToken": false
+        }
+        body_format: json
+        validate_certs: false
+      register: auth
+    
+    - name: Create Tenant Account
+      netapp.storagegrid.na_sg_grid_account:
+        api_url: "https://192.168.4.230:443"
+        auth_token: "{{ auth.json.data }}"
+        validate_certs: false
+        state: present
+        name: tenantB
+        protocol: s3
+        management: true
+        use_own_identity_source: false
+        allow_platform_services: true
+        password: "br@@mspun111"
+        quota_size: 10
