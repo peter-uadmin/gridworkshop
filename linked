@@ -11,10 +11,13 @@ create_tenant.yml
 delete_tenant.sh  
 delete_tenant_v1.yml  
 delete_tenant_v2.yml
+list_tenant_users.yml
+list_tenant_users_hardcoded.yml
 
 #buckets
-create_bucket_auth.ym
+create_bucket_auth.yml
 create_access_keys.yml
 delete_bucket_role.yml  
 delete_bucket.yml
+delete_all_buckets_beta.yml
 
