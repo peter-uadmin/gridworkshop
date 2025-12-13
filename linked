@@ -1,9 +1,8 @@
-#get token and cert
+#authorization
 get_token_and_cert.txt
 sgrid-adm.pem
 get_token_certs_true.yml 
 
-#
 #tenant management
 get_tenant_ids.sh
 create_tenant.sh 
