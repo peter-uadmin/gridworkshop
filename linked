@@ -2,3 +2,16 @@
 get_token_and_cert.txt
 sgrid-adm.pem
 get_token_certs_true.yml 
+
+#
+#tenant management
+get_tenant_ids.sh
+create_tenant.sh 
+create_tenant.yml
+delete_tenant.sh  
+delete_tenant_v1.yml  
+delete_tenant_v2.yml
+
+#buckets
+create_bucket_auth.ym
+
