@@ -1,3 +1,4 @@
+#run with --extra-vars
 ---
 - name: Delete NetApp StorageGRID tenant account
   hosts: localhost
@@ -8,10 +9,10 @@
     ./global_vars.yml
 
   vars_prompt:
-    - name: tenant_name
-      prompt: "enter tenant name"
-      default: "default"
-      private: no
+#    - name: tenant_name
+#      prompt: "enter tenant name"
+#      default: "default"
+#      private: no
 
   roles:
     - grid_auth
