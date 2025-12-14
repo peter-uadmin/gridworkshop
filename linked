@@ -3,11 +3,16 @@
 0_clone_repository
 0_code-server
 
+#ansible intro
+1_playbook format
+1_playbook template
+1_running_a_playbook
 
 #authorization
-get_token_and_cert.txt
-sgrid-adm.pem
-get_token_certs_true.yml 
+2_get_token_and_cert.txt
+2_generate_pem.sh
+2_sgrid-adm.pem
+2_get_token_certs_true.yml 
 
 #tenant management
 get_tenant_ids.sh
