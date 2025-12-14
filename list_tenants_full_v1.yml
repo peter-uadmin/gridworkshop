@@ -19,16 +19,16 @@
           password: "{{ storagegrid_password }}"
         status_code: 200
         validate_certs: false
-      register: token_response
+      register: auth
 
     - name: Debug token response
       debug:
-        var: token_response.json
+        var: auth.json
 
     - name: Set bearer token fact
       set_fact:
-        bearer_token: "{{ token_response.json.data }}"
-      when: token_response.json.data is defined
+        bearer_token: "{{ auth.json.data }}"
+      when: auth.json.data is defined
 
     - name: Get list of tenants from StorageGRID
       uri:
@@ -40,7 +40,8 @@
         validate_certs: false
       register: tenant_response
 
-    - name: List only tenantname and accountid
+    - name: list tenants
       debug:
+        msg: "id={{ item.id }}, name={{ item.name }}"
       loop: "{{ tenant_response.json.data }}"
 
