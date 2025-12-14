@@ -1,0 +1,60 @@
+---
+- name: Delete StorageGRID tenant
+  hosts: localhost
+  gather_facts: false
+
+  vars_prompt:
+    - name: grid_addr
+      prompt: "Grid admin address"
+      default: "192.168.4.230"
+      private: no
+
+    - name: grid_user
+      prompt: "Grid admin username"
+      default: "root"
+      private: no
+
+    - name: grid_pass
+      prompt: "Grid admin password"
+      private: yes
+
+    - name: tenant_id
+      prompt: "Tenant ID to delete"
+      private: no
+
+  tasks:
+    - name: Get grid admin token
+      ansible.builtin.uri:
+        url: "https://{{ grid_addr }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          username: "{{ grid_user }}"
+          password: "{{ grid_pass }}"
+          cookie: false
+          csrfToken: false
+        headers:
+          Content-Type: "application/json"
+        validate_certs: false      # switch to ca_path with your PEM if desired
+        status_code: 200
+      register: auth
+
+    - name: Set grid token
+      ansible.builtin.set_fact:
+        grid_token: "{{ auth.json.data }}"
+
+    - name: Delete tenant account
+      ansible.builtin.uri:
+        url: "https://{{ grid_addr }}/api/v3/grid/accounts/{{ tenant_id }}"
+        method: DELETE
+        headers:
+          Authorization: "Bearer {{ grid_token }}"
+          Content-Type: "application/json"
+        validate_certs: false
+        status_code: 204
+      register: delete_result
+
+    - name: Show delete result
+      ansible.builtin.debug:
+        var: delete_result.status
+
