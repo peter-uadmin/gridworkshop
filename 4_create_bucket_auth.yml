@@ -1,0 +1,51 @@
+#it does not use a role to get the authtoken
+---
+- name: Create StorageGRID Bucket
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - netapp.storagegrid
+  vars_files:
+    global_vars.yml
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "enter tenant id"
+      default: "default"
+      private: no
+
+    - name: user_name 
+      prompt: "enter user name"
+      default: "default"
+      private: no
+
+    - name: user_pass 
+      prompt: "enter password "
+      default: "default"
+      private: yes
+
+    - name: bucket_name
+      prompt: "enter bucket name"
+      default: "default"
+      private: no
+  roles:
+    - tenant_auth
+  tasks:
+#    - name: Get Grid Authorization Token
+#      uri:
+#        url: "https://192.168.4.230:443/api/v3/authorize"
+#        method: POST
+#        body: '{"accountId": "{{ tenant_id }}", "username": "{{ user_name }}", "password": "{{ user_pass }}"}'
+#        body_format: json
+#        validate_certs: false
+#        status_code: [200]
+#      register: auth
+
+    - name: Create S3 Bucket
+      netapp.storagegrid.na_sg_org_container:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ auth.json.data }}"
+        validate_certs: false
+        state: present
+        name: "{{ bucket_name }}"
+        region: us-east-1
