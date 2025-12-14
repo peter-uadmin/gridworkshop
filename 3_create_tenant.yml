@@ -51,6 +51,9 @@
         body:
           name: "{{ tenant_name }}"
           password: "{{ tenant_root_pass }}"
+          capabilities:
+            - management
+            - s3
         headers:
           Authorization: "Bearer {{ grid_token }}"
           Content-Type: "application/json"
