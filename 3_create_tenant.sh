@@ -1,11 +1,12 @@
 ADDR=192.168.4.230
 GRID_USER="root"                 # grid admin
 GRID_PASS="br@@mspun111"
-echo -n "tenant: "
+echo -n "tenantname: "
 read tenant
 echo -n "password: "
 read password
-
+echo -n "bucket: "
+read bucket
 # 1) Get grid admin token
 GRID_TOKEN=$(curl -k -s -X POST "https://${ADDR}/api/v3/authorize" \
   -H "Content-Type: application/json" \
@@ -15,13 +16,11 @@ GRID_TOKEN=$(curl -k -s -X POST "https://${ADDR}/api/v3/authorize" \
         \"cookie\": false,
         \"csrfToken\": false
       }" | jq -r '.data')
-
-# 2) Create tenant with 
 curl -k -X POST \
-  "https://192.168.4.230/api/v4/grid/accounts" \
+  "https://${ADDR}/api/v4/grid/accounts" \
   -H "Authorization: Bearer ${GRID_TOKEN}" \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
+  -H "accept: application/json" \
+  -H "Content-Type: application/json" \
   -d @- <<EOF
 {
   "name": "${tenant}",
@@ -31,12 +30,20 @@ curl -k -X POST \
     "s3"
   ],
   "policy": {
-    "useAccountIdentitySource": false,
+    "useAccountIdentitySource": true,
     "allowPlatformServices": false,
     "allowSelectObjectContent": false,
     "quotaObjectBytes": 100000000000
   },
-  "password": "${password}"
+  "password": "${password}",
+  "s3Bucket": {
+    "enableVersioning": false,
+    "name": "${bucket}",
+    "region": "us-east-1",
+    "s3ObjectLock": {
+      "enabled": false
+    }
+  }
 }
 EOF
 
