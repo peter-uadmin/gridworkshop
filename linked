@@ -24,8 +24,10 @@
 3_delete_tenant.sh  
 3_delete_tenant_v1.yml  
 3_delete_tenant_v2.yml
+3_list_tenants.yml
 3_list_tenant_users.yml
 3_list_tenant_users_hardcoded.yml
+3_list_tenants_with_curl.sh
 
 #buckets
 4_create_bucket_auth.yml
