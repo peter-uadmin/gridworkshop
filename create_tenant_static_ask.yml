@@ -1,5 +1,4 @@
-#gets root authtoken in playbook and creates tenant
-#does not user a role to get the authtoken
+#using a vault
 ---
 - name: Create StorageGRID Tenant
   hosts: localhost
