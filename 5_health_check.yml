@@ -1,0 +1,68 @@
+---
+- name: StorageGRID health check
+  hosts: localhost
+  gather_facts: false
+
+  vars_prompt:
+    - name: admin_node_ip
+      prompt: "Enter StorageGRID Admin Node IP or FQDN"
+      default: "192.168.4.230"
+      private: no
+
+    - name: grid_username
+      prompt: "Enter Grid Manager username"
+      default: "root"
+      private: no
+
+    - name: grid_password
+      prompt: "Enter Grid Manager password"
+      private: yes
+
+  vars:
+    sg_api_base: "https://{{ admin_node_ip }}"
+    validate_certs: false
+
+  tasks:
+    - name: Get grid auth token
+      ansible.builtin.uri:
+        url: "{{ sg_api_base }}/api/v4/authorize"
+        method: POST
+        body_format: json
+        body:
+          username: "{{ grid_username }}"
+          password: "{{ grid_password }}"
+          cookie: false
+          csrfToken: false
+        status_code: 200
+        validate_certs: "{{ validate_certs }}"
+      register: auth
+
+    - name: Extract bearer token
+      ansible.builtin.set_fact:
+        grid_token: "{{ auth.json.data }}"
+
+    # Adjust the path here to the health/alarms/alerts-style endpoint
+    # For example: /api/v4/grid/alarms or a specific info name.
+    - name: Call grid health endpoint (read-only)
+      ansible.builtin.uri:
+        url: "{{ sg_api_base }}/api/v4/grid/alarms"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ grid_token }}"
+          Accept: "application/json"
+        status_code: 200
+        validate_certs: "{{ validate_certs }}"
+      register: health
+
+    - name: Show raw health JSON
+      ansible.builtin.debug:
+        var: health.json
+
+    - name: Print key health summary fields
+      ansible.builtin.debug:
+        msg: >
+          Critical: {{ health.json.data.alarms.critical | default('n/a') }},
+          Major: {{ health.json.data.alarms.major | default('n/a') }},
+          Minor: {{ health.json.data.alarms.minor | default('n/a') }}
+      when: health.json.data is defined
+
