@@ -1,3 +1,9 @@
+#setup
+0_ansible_setup
+0_clone_repository
+0_code-server
+
+
 #authorization
 get_token_and_cert.txt
 sgrid-adm.pem
