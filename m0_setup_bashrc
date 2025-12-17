@@ -1,0 +1,4 @@
+Your .bashrc should have an alias "play"
+alias play=/usr/local/bin/ansible-playbook
+
+So you can run "play book.yml" instead of "ansible-playbook book.yml"
