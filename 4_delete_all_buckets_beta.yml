@@ -7,9 +7,9 @@
 
   vars:
     api_url: "https://192.168.4.230:443"
-    tenant_id: 06720005734697258898 
+    tenant_id: "{{ tenant_id }} 
     bucket_names:
-      - aaaak 
+      - perbuck
   tasks:
     - name: Get Grid Authorization Token
       uri:
