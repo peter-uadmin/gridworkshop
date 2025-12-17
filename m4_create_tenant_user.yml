@@ -1,3 +1,4 @@
+---
 - name: Create StorageGRID tenant user
   hosts: localhost
   gather_facts: false
@@ -14,25 +15,9 @@
       default: "06720005734697258898" 
       private: no
       
-#    - name: tenant_user_pass
-#      prompt: "Tenant user password"
-#      private: yes
-
-
+  roles:
+    - tenant_auth
   tasks:
-    - name: Get Tenant Authorization Token
-      uri:
-        url: "{{ grid_endpoint }}/api/v3/authorize"
-        method: POST
-        body: '{"accountId": "{{ tenant_id }}", 
-                "username": "{{ grid_username }}", 
-                "password": "{{ grid_password }}"
-               }'
-        body_format: json
-        validate_certs: false
-        status_code: [200]
-      register: auth
-
     - name: Create tenant local user
       ansible.builtin.uri:
         url: "{{ grid_endpoint }}/api/v3/org/users"
@@ -41,7 +26,6 @@
         body:
           fullName: "{{ tenant_user_name }}"
           uniqueName: "user/{{ tenant_user_name }}"
-         # password: "br@@mspun111"
         headers:
           Authorization: "Bearer {{ auth.json.data }}"
           Content-Type: "application/json"
