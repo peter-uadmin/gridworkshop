@@ -1,0 +1,49 @@
+- name: Delete All Tenant Buckets
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - netapp.storagegrid
+
+  vars:
+    api_url: "https://192.168.4.230:443"
+    tenant_id: "{{ tenant_id }}"
+
+  tasks:
+    - name: Get Grid Authorization Token
+      uri:
+        url: "{{ api_url }}/api/v3/authorize"
+        method: POST
+        body:
+          accountId: "{{ tenant_id }}"
+          username: "root"
+          password: "br@@mspun111"
+        body_format: json
+        validate_certs: false
+        status_code: [200]
+      register: auth
+
+    - name: Get tenant bucket info
+      netapp.storagegrid.na_sg_org_info:
+        api_url: "{{ api_url }}"
+        auth_token: "{{ auth.json.data }}"
+        validate_certs: false
+        # depending on module version, one of these is used:
+        # info_name: buckets
+        # or:
+        # api: "/grid/v3/org/containers"
+      register: org_info
+
+    - name: Build list of bucket names
+      set_fact:
+        bucket_names: "{{ org_info['containers'] | map(attribute='name') | list }}"
+        # adjust key path based on actual return structure
+
+    - name: Delete each bucket
+      netapp.storagegrid.na_sg_org_container:
+        api_url: "{{ api_url }}"
+        auth_token: "{{ auth.json.data }}"
+        validate_certs: false
+        name: "{{ item }}"
+        state: absent
+      loop: "{{ bucket_names }}"
+
