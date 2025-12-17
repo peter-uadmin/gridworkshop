@@ -1,3 +1,4 @@
+#take care the "here" part. Closing EOF must be on separate line with no trailing spaces
 ADDR=192.168.4.230
 GRID_USER="root"                 # grid admin
 GRID_PASS="br@@mspun111"
@@ -10,12 +11,13 @@ read bucket
 # 1) Get grid admin token
 GRID_TOKEN=$(curl -k -s -X POST "https://${ADDR}/api/v3/authorize" \
   -H "Content-Type: application/json" \
-  -d "{
-        \"username\": \"${GRID_USER}\",
-        \"password\": \"${GRID_PASS}\",
-        \"cookie\": false,
-        \"csrfToken\": false
-      }" | jq -r '.data')
+  -d @- <<EOF |
+{
+        "username": "${GRID_USER}", "password": "${GRID_PASS}", "cookie": false, "csrfToken": false
+      } 
+EOF
+jq -r '.data')
+
 curl -k -X POST \
   "https://${ADDR}/api/v4/grid/accounts" \
   -H "Authorization: Bearer ${GRID_TOKEN}" \
