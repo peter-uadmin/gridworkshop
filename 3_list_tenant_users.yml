@@ -10,17 +10,17 @@
 #
   vars_prompt:
     - name: tenant_id 
-      prompt: "enter accountid"
+      prompt: "enter tenant_id"
       default: "default"
       private: no
-    - name: tenant_username 
+    - name: tenant_admin 
       prompt: "enter username"
       default: "default"
       private: no
     - name: tenant_password
       prompt: "enter password"
-      default: "default"
       private: yes
+
   vars_files:
     - global_vars.yml
 #
@@ -31,7 +31,7 @@
       uri:
         url: "{{ grid_endpoint }}/api/v3/authorize"
         method: POST
-        body: '{"accountId": "{{ tenant_id }}", "username": "{{ tenant_username }}", "password": "{{ tenant_password }}"}'
+        body: '{"accountId": "{{ tenant_id }}", "username": "{{ tenant_admin }}", "password": "{{ tenant_password }}"}'
         body_format: json
         validate_certs: false
         status_code: [200]
@@ -55,4 +55,3 @@
       loop: "{{ sg_users.json.data }}" 
       loop_control:
         label: "{{ item.fullName }}"
-#        var: sg_users.json.data 
