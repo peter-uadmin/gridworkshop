@@ -1,0 +1,55 @@
+---
+- name: Delete StorageGRID tenant user
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - netapp.storagegrid
+
+  vars:
+    grid_endpoint: "https://192.168.4.230:443"
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "Enter tenant ID"
+      private: no
+
+    - name: tenant_root_user
+      prompt: "Enter tenant root username"
+      private: no
+      default: "root"
+
+    - name: tenant_root_pass
+      prompt: "Enter tenant root password"
+      private: yes
+
+    - name: user_simple_name
+      prompt: "Enter tenant user name to DELETE (simple, e.g. jdoe)"
+      private: no
+
+  tasks:
+    - name: Get tenant auth token
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          accountId: "{{ tenant_id }}"
+          username: "{{ tenant_root_user }}"
+          password: "{{ tenant_root_pass }}"
+        validate_certs: false
+        status_code: [200]
+      register: auth
+
+    - name: Delete tenant user
+      netapp.storagegrid.na_sg_org_user:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ auth.json.data }}"
+        validate_certs: false
+        state: absent
+        unique_name: "user/{{ user_simple_name }}"
+      register: deleted_user
+
+    - name: Show delete result
+      debug:
+        var: deleted_user
+
