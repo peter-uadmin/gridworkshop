@@ -2,14 +2,9 @@
   hosts: localhost
   gather_facts: false
 
+  vars_files:
+    - global_vars.yml
   vars_prompt:
-    - name: grid_addr
-      prompt: "Grid / tenant address"
-      default: "192.168.4.230"
-      private: no
-    - name: tenant_token
-      prompt: "Paste tenant bearer token"
-      private: yes
     - name: tenant_user_name
       prompt: "Tenant username to create"
       default: "user1"
@@ -21,15 +16,15 @@
   tasks:
     - name: Create tenant local user
       ansible.builtin.uri:
-        url: "https://{{ grid_addr }}/api/v3/org/users"
+        url: "{{ grid_endpoint }}/api/v3/org/users"
         method: POST
         body_format: json
         body:
           fullName: "{{ tenant_user_name }}"
           uniqueName: "user/{{ tenant_user_name }}"
-#          password: "{{ tenant_user_pass }}"
+         # password: "br@@mspun111"
         headers:
-          Authorization: "Bearer {{ tenant_token }}"
+          Authorization: "Bearer 8986c29a-66ae-43d8-9d1c-44bcb87436f5"
           Content-Type: "application/json"
         validate_certs: false
         status_code: 201
