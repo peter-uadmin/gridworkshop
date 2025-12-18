@@ -1,0 +1,17 @@
+Module 2.
+
+1. m2_fetch_grid_pem.yml
+   (will save cert in m2_sgrid_admin.pem)
+
+2. m2_create_grid_authtoken.yml
+   (will use pem file as ca_cert and generate auth_token)
+
+3. m2_create_grid_authtoken.yml
+   (will generate auth_token with "validate_certs: false")
+
+Related curl scripts:
+
+1. m2_fetch_grid_pem.sh
+
+2. m2_get_grid_token.sh
+
