@@ -1,21 +1,35 @@
-#to work with a selfsigned cert.
+- name: Create StorageGRID tenant user
+  hosts: localhost
+  gather_facts: false
 
-#1. Configuration - Security - Certificates - Global - Management interface certificate
-#2. Select "Use default certificate" apply and save.
+  vars_files:
+    - global_vars.yml
+  vars_prompt:
+    - name: tenant_user_name
+      prompt: "Tenant username to create"
+      default: "user1"
+      private: no
+#    - name: tenant_user_pass
+#      prompt: "Tenant user password"
+#      private: yes
 
-#3. On linux download this grid certificate:
-   echo | openssl s_client -connect 192.168.4.230:443 -showcerts 2>/dev/null \
-   | sed -n '/BEGIN CERTIFICATE/,/END CERTIFICATE/p' > sgrid-admin.pem
+  tasks:
+    - name: Create tenant local user
+      ansible.builtin.uri:
+        url: "{{ grid_endpoint }}/api/v3/org/users"
+        method: POST
+        body_format: json
+        body:
+          fullName: "{{ tenant_user_name }}"
+          uniqueName: "user/{{ tenant_user_name }}"
+         # password: "br@@mspun111"
+        headers:
+          Authorization: "Bearer 8986c29a-66ae-43d8-9d1c-44bcb87436f5"
+          Content-Type: "application/json"
+        validate_certs: false
+        status_code: 201
+      register: tenant_user
 
-#4. generate a token:
-   token=$(curl -s -k -X POST "https://192.168.4.230:443/api/v3/authorize" \
-   -H "accept: application/json" \
-   -H "Content-Type: application/json" \
-   -d '{"username": "root", "password": "br@@mspun111"}'|jq -r '.data')
-   
-#5. List accounts using the certificate
-    curl --cacert sgrid-admin.pem \
-    -H "accept: application/json" \
-    -H "Authorization: Bearer $token" \
-    "https://192.168.4.230:443/api/v3/grid/accounts" | jq -r '.data[].id', '.data[].name
-
+    - name: Show result
+      ansible.builtin.debug:
+        var: tenant_user.json
