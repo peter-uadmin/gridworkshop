@@ -1,38 +1,66 @@
 ---
 - name: Create StorageGRID tenant user
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
+  collections:
+    - netapp.storagegrid
 
-  vars_files:
-    - global_vars.yml
+  vars:
+    grid_endpoint: "https://192.168.4.230:443"
+
   vars_prompt:
-    - name: tenant_user_name
-      prompt: "Tenant username to create"
-      default: "user1"
-      private: "no"
-    - name: tenant_id 
-      prompt: "account_id"
-      default: "06720005734697258898" 
+    - name: tenant_id
+      prompt: "Enter tenant ID"
       private: no
-      
-  roles:
-    - tenant_auth
+
+    - name: tenant_root_user
+      prompt: "Enter tenant root username"
+      private: no
+      default: "root"
+
+    - name: tenant_root_pass
+      prompt: "Enter tenant root password"
+      private: yes
+
+    - name: new_user_simple_name
+      prompt: "Enter new tenant user name (simple, e.g. jdoe)"
+      private: no
+
+    - name: new_user_full_name
+      prompt: "Enter new tenant user full name"
+      private: no
+
+    - name: new_user_password
+      prompt: "Enter new tenant user password"
+      private: yes
+
   tasks:
-    - name: Create tenant local user
-      ansible.builtin.uri:
-        url: "{{ grid_endpoint }}/api/v3/org/users"
+    - name: Get tenant auth token
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/authorize"
         method: POST
         body_format: json
         body:
-          fullName: "{{ tenant_user_name }}"
-          uniqueName: "user/{{ tenant_user_name }}"
-        headers:
-          Authorization: "Bearer {{ auth.json.data }}"
-          Content-Type: "application/json"
+          accountId: "{{ tenant_id }}"
+          username: "{{ tenant_root_user }}"
+          password: "{{ tenant_root_pass }}"
         validate_certs: false
-        status_code: 201
-      register: tenant_user
+        status_code: [200]
+      register: auth
 
-    - name: Show result
-      ansible.builtin.debug:
-        var: tenant_user.json
+    - name: Create tenant user
+      netapp.storagegrid.na_sg_org_user:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ auth.json.data }}"
+        validate_certs: false
+        state: present
+        unique_name: "user/{{ new_user_simple_name }}"
+        full_name: "{{ new_user_full_name }}"
+        password: "{{ new_user_password }}"
+        disable: false
+      register: created_user
+
+    - name: Show created user info
+      debug:
+        var: created_user
+
