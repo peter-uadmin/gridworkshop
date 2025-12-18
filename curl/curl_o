@@ -1,0 +1,3 @@
+curl -k -o m_get_token.sh uadmin.org/m_get_token.sh
+curl -k -o m_create_tenant.sh uadmin.org/m_create_tenant.sh
+chmod +x m_*
