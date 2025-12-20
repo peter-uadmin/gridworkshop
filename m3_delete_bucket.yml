@@ -15,12 +15,12 @@
 
     - name: user_name
       prompt: "enter tenant root user name"
-      default: "default"
+      default: "root"
       private: no
 
     - name: user_pass
       prompt: "enter tenant root user password"
-      default: "default"
+      default: "br@@mspun111"
       private: yes
 
     - name: bucket_name
