@@ -12,6 +12,7 @@
     grid_endpoint: "https://192.168.4.230:443"
     tenant_username: "root"  
     tenant_password: "br@@mspun111"  
+
   vars_prompt:
     - name: tenant_id 
       prompt: "enter accountid"
