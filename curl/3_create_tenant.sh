@@ -1,7 +1,7 @@
 #take care the "here" part. Closing EOF must be on separate line with no trailing spaces
-ADDR=192.168.0.80
+ADDR=192.168.4.230
 GRID_USER="root"                 # grid admin
-GRID_PASS="Netapp1!"
+GRID_PASS="br@@mspun111"
 echo -n "tenantname: "
 read tenant
 echo -n "password: "
