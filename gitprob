@@ -1,7 +1,0 @@
-# 1. Start ssh-agent in the background
-eval "$(ssh-agent -s)"
-
-# 2. Add your SSH private key to the agent
-ssh-add ~/.ssh/id_ed25519      # or ~/.ssh/id_rsa, or your specific key file
-
-git remote set-url origin git@github.com:peter-uadmin/gridworkshop.git

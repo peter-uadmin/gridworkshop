@@ -1,0 +1,5 @@
+git remote -v
+git remote set-url origin git@github.com:peter-uadmin/gridworkshop.git
+ssh -T git@github.com
+git push origin main
+
