@@ -1,0 +1,17 @@
+#run the following to create a vault file with data
+ansible-vault create vault.yml
+
+#list its content
+ansible-vault view vault.yml --ask-vault-pass 
+
+#edit its content
+ansible-vault edit vault.yml --ask-vault-pass 
+
+#call from playbook:
+#
+  vars_files:
+    vault.yml
+#
+#run the playbook with argument
+ansible-playbook  play.yml  --ask-vault-pass
+
