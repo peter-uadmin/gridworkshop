@@ -1,0 +1,38 @@
+---
+- name: Create StorageGRID tenant user
+  hosts: localhost
+  gather_facts: false
+
+  vars_files:
+    - global_vars.yml
+  vars_prompt:
+    - name: tenant_user_name
+      prompt: "Tenant username to create"
+      default: "user1"
+      private: "no"
+    - name: tenant_id 
+      prompt: "account_id"
+      default: "06720005734697258898" 
+      private: no
+      
+  roles:
+    - tenant_auth
+  tasks:
+    - name: Create tenant local user
+      ansible.builtin.uri:
+        url: "{{ grid_endpoint }}/api/v3/org/users"
+        method: POST
+        body_format: json
+        body:
+          fullName: "{{ tenant_user_name }}"
+          uniqueName: "user/{{ tenant_user_name }}"
+        headers:
+          Authorization: "Bearer {{ auth.json.data }}"
+          Content-Type: "application/json"
+        validate_certs: false
+        status_code: 201
+      register: tenant_user
+
+    - name: Show result
+      ansible.builtin.debug:
+        var: tenant_user.json
