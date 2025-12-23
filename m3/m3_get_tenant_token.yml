@@ -1,0 +1,40 @@
+#common way to retrieve a tenants session authtoken
+---
+- name: Get Tenant Auth Token
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - netapp.storagegrid
+#
+#define endpoint, user, pass and tenantid
+#
+  vars:
+    grid_endpoint: "https://192.168.4.230:443"
+    tenant_username: "root"  
+    tenant_password: "br@@mspun111"  
+  vars_prompt:
+    - name: tenant_id 
+      prompt: "enter accountid"
+      default: "default"
+      private: no
+#
+#connect to endpoint ans use /api/v3/authorize
+#    
+  tasks:
+    - name: Get Tenant Authorization Token
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/authorize"
+        method: POST
+        body: '{"accountId": "{{ tenant_id }}", 
+               "username": "{{ tenant_username }}", 
+               "password": "{{ tenant_password }}"}'
+        body_format: json
+        validate_certs: false
+        status_code: [200]
+      register: auth
+#
+#the authtoken can be processes as auth.json.data (variable)
+#
+    - name: Display Tenant Auth Token
+      ansible.builtin.debug:
+        msg: "Tenant Auth Token: {{ auth.json.data }}"
