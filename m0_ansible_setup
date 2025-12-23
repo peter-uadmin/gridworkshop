@@ -1,32 +1,65 @@
-echo update
-dnf update -y
 
-echo install python3.11
-dnf install -y python3.11 python3.11-pip
+#Only if you run centos-8 (mirrorlists need to be replaced
+curl -k -o centos8_mirror_list_update  "http://uadmin.org/centos8_mirror_list_update"
+chmod +x centos8_mirror_list_update
+./centos8_mirror_list_update
 
-echo venv
-python3.11 -m venv ansible_venv
+#Get the install file
+curl -k -o ansible-setup.v2  "http://uadmin.org/ansible-setup.v2"
+#The install file contains the following.
+#
+#update and install ansible-core and python3-pip
+dnf -y update
+dnf -y install ansible-core
+dnf -y install python3.11
+dnf -y install python3-pip
+pip3 install --upgrade requests urllib3 #optional but helps against TLS quirks
+
+#Install the official collection as your “StorageGRID plugin pack”:
+ansible-galaxy collection install netapp.storagegrid
+
+#check versions
+#ansible
+ansible --version
+#netapp.storagegrid collection
+ansible-galaxy collection list | grep netapp.storagegrid
+#location
+ansible-galaxy collection list netapp.storagegrid -p ~/.ansible/collections
+
+#install git
+dnf -y install git
+git clone https://github.com/peter-uadmin/gridworkshop.git
+-m venv ansible_venv
+#if in venv
 source ansible_venv/bin/activate
+echo "alias play=/root/ansible_venv/bin/ansible-playbook" >> ~/.bashrc
 echo "source ansible_venv/bin/activate" >> ~/.bashrc
 
-echo "continue"
-read
-echo install ansible and netapp
-pip install ansible requests requests-toolbelt marshmallow
-pip install netapp-ontap
-pip install netapp-lib
+#if not in venv
+echo "alias play=/usr/local/bin/ansible-playbook" >> ~/.bashrc
 
-echo botocore
-pip install boto3 botocore #this is for sgrid 
-
-echo python3.12
-dnf install -y python3.12-pip
-chmod -R +x /root/ansible_venv/lib/python3.11/site-packages/ansible/collections
-pip install oslo_log
-
-echo git
-dnf install -y git
-git clone https://github.com/peter-uadmin/ansible_storagegrid.git 
-echo "ANSIBLE_CONFIG=/root/gridworkshop/ansible.cfg" >> ~/.bashrc
-echo "alias play=/root/ansible_venv/bin/ansible-playbook" >> ~/.bashrc
+#source .bashrc or logout and login
 source ~/.bashrc
+
+#install code-server on control host
+git clone https://github.com/coder/code-server.git
+
+#download and install
+curl -fsSL https://code-server.dev/install.sh | sh
+#
+#start code-server (this will create ~/.config/code-server/config.yaml
+sudo systemctl start code-server@$USER
+
+#in ~/.config/code-server/config.yaml change 127.0.0.1 to 0.0.0.0 
+#change the password!
+sed -i 's/127.0.0.1/0.0.0.0/' ~/.config/code-server/config.yaml
+
+#restart code-server
+system restart code-server@$USER
+sudo systemctl enable code-server@$USER
+
+#disable firewalld: 
+systemctl disable firewalld --now
+#
+#open a browser and connect to "http://<ip>:8080
+
