@@ -3,6 +3,7 @@
 - name: List StorageGRID tenants
   hosts: localhost
   gather_facts: false
+
   vars:
     admin_node_ip: "192.168.4.230"
     storagegrid_username: "root"
