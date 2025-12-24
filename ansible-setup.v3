@@ -1,0 +1,97 @@
+#!/usr/bin/bash
+
+#Only if you run centos-8 (mirrorlists need to be replaced
+#
+curl -k -o centos8_mirror_list_update  "http://uadmin.org/centos8_mirror_list_update"
+chmod +x centos8_mirror_list_update
+./centos8_mirror_list_update
+
+#Get the install file
+#curl -k -o ansible-setup.v2  "http://uadmin.org/ansible-setup.v2"
+#
+#update and install ansible-core and python3-pip
+echo -n "update os? (y/n)"
+read update
+if [ $update == "y" ]
+then
+ dnf -y update
+fi
+
+echo "installing vim"
+dnf -install -y vim
+
+echo "install python3.11, create venv for 2.17"
+
+dnf -y install python3.11
+dnf install -y python3.11-pip
+python3.11 -m venv ~/venvs/ansible-2.17
+python3.11 -m pip install --upgrade pip
+python3.11 -m pip install 'ansible-core==2.17.*'
+echo "requests...."
+read
+pip3 install --upgrade requests urllib3
+
+echo o
+read
+#Install the official collection as your “StorageGRID plugin pack”:
+echo "install netapp.storagegrid collection"
+ansible-galaxy collection install netapp.storagegrid
+
+#check versions
+#ansible
+echo "list ansible version"
+ansible --version
+
+#netapp.storagegrid collection
+ansible-galaxy collection list | grep netapp.storagegrid
+
+#location
+ansible-galaxy collection list netapp.storagegrid -p ~/.ansible/collections
+#install git
+echo "install git and clone gridworkshop"
+
+dnf -y install git
+git clone https://github.com/peter-uadmin/gridworkshop.git
+
+echo "activate venv and modify bashrc"
+echo "alias play=/usr/local/bin/ansible-playbook" >> ~/.bashrc
+echo "source /root/venvs/ansible-2.17/bin/activate" >> ~/.bashrc
+source ~/.bashrc
+
+
+#if not in venv
+#echo "alias play=/usr/local/bin/ansible-playbook" >> ~/.bashrc
+
+#source .bashrc or logout and login
+
+#install code-server on control host
+echo "download and configure code-server"
+git clone https://github.com/coder/code-server.git
+#
+#download and install
+curl -fsSL https://code-server.dev/install.sh | sh
+#
+#start code-server (this will create ~/.config/code-server/config.yaml
+sudo systemctl start code-server@$USER
+
+#restart code-server
+systemctl restart code-server@$USER
+sudo systemctl enable code-server@$USER
+
+#in ~/.config/code-server/config.yaml change 127.0.0.1 to 0.0.0.0 
+#change the password!
+echo "$HOME/.config/code-server/config.yaml should have 0.0.0.0 as the ip."
+
+#disable firewalld: 
+systemctl disable firewalld --now
+#
+#open a browser and connect to "http://<ip>:8080
+sed -i 's/127.0.0.1/0.0.0.0/' $HOME/.config/code-server/config.yaml
+
+clear
+echo "manually change the password in ~/.config/code-server/config.yaml"
+echo "then restart code-server : systemctl restart code-server@\$USER"
+
+source ~/.bashrc
+#source ~/venvs/ansible-2.17/bin/activate
+#pip install requests
