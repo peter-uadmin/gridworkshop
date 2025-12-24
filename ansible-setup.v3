@@ -6,25 +6,31 @@ curl -k -o centos8_mirror_list_update  "http://uadmin.org/centos8_mirror_list_up
 chmod +x centos8_mirror_list_update
 ./centos8_mirror_list_update
 
-#Get the install file
-#curl -k -o ansible-setup.v2  "http://uadmin.org/ansible-setup.v2"
+#curl -k -o ansible-setup.v3  "http://uadmin.org/ansible-setup.v3"
 #
-#update and install ansible-core and python3-pip
+#update or not
 echo -n "update os? (y/n)"
 read update
 if [ $update == "y" ]
 then
  dnf -y update
 fi
-
+#vim
 echo "installing vim"
-dnf -install -y vim
+dnf install -y vim
 
+#python create venv
 echo "install python3.11, create venv for 2.17"
-
 dnf -y install python3.11
 dnf install -y python3.11-pip
-python3.11 -m venv ~/venvs/ansible-2.17
+VENV_DIR="$PWD/.venv"
+if [ ! -d "$VENV_DIR" ] 
+then
+ python3.11 -m venv "$VENV_DIR" 
+fi
+
+#activate venv
+source "$VENV_DIR/bin/activate"
 python3.11 -m pip install --upgrade pip
 python3.11 -m pip install 'ansible-core==2.17.*'
 echo "requests...."
@@ -51,8 +57,8 @@ dnf -y install git
 git clone https://github.com/peter-uadmin/gridworkshop.git
 
 echo "activate venv and modify bashrc"
-echo "alias play=/usr/local/bin/ansible-playbook" >> ~/.bashrc
-echo "source /root/venvs/ansible-2.17/bin/activate" >> ~/.bashrc
+echo "alias play=~/.venv/bin/ansible-playbook" >> ~/.bashrc
+echo "source ~/.venv/bin/activate" >> ~/.bashrc
 source ~/.bashrc
 
 
@@ -89,6 +95,4 @@ clear
 echo "manually change the password in ~/.config/code-server/config.yaml"
 echo "then restart code-server : systemctl restart code-server@\$USER"
 
-source ~/.bashrc
-#source ~/venvs/ansible-2.17/bin/activate
 #pip install requests
