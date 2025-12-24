@@ -28,11 +28,8 @@ python3.11 -m venv ~/venvs/ansible-2.17
 python3.11 -m pip install --upgrade pip
 python3.11 -m pip install 'ansible-core==2.17.*'
 echo "requests...."
-read
 pip3 install --upgrade requests urllib3
 
-echo o
-read
 #Install the official collection as your “StorageGRID plugin pack”:
 echo "install netapp.storagegrid collection"
 ansible-galaxy collection install netapp.storagegrid
