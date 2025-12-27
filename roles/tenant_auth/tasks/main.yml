@@ -7,13 +7,13 @@
     body_format: json
     body:
       accountId: "{{ tenant_id }}"
-      username: "{{ tenant_username }}"
+      username: "{{ tenant_user_name }}"
       password: "{{ tenant_password }}"
     status_code: 200
     validate_certs: false
   register: auth
 
-#- name: Set bearer token fact
-#  set_fact:
-#    bearer_token: "{{ auth.json.data }}"
-#  when: auth.json.data is defined
+- name: Set bearer token fact
+  set_fact:
+    bearer_token: "{{ auth.json.data }}"
+  when: auth.json.data is defined
