@@ -1,0 +1,49 @@
+#todo: fix the endpoint (
+---
+- name: List StorageGRID tenant buckets via Ansible module
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    grid_endpoint: "https://192.168.4.230:443"
+    grid_admin_user: "root"
+    grid_admin_pass: "br@@mspun111"
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "Enter tenant ID"
+      default: "06720005734697258898"
+      private: no
+
+  tasks:
+    - name: Get grid auth token
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          username: "{{ grid_admin_user }}"
+          password: "{{ grid_admin_pass }}"
+          cookie: false
+          csrfToken: false
+        validate_certs: false
+        status_code: [200]
+      register: auth
+
+    - name: Fail if token not found
+      fail:
+        msg: "Failed to get auth token: {{ auth.json }}"
+      when: auth.json.data is not defined
+
+    - name: List tenant buckets via grid API
+      netapp.storagegrid.na_sgrid_list_tenant_buckets:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ auth.json.data }}"
+        validate_certs: false
+        tenant_account_id: "{{ tenant_id }}"
+      register: buckets
+
+    - name: Show buckets JSON
+      debug:
+        var: buckets
+
