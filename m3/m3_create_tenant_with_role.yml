@@ -15,7 +15,7 @@
       private: no
 
   roles:
-    - grid_auth
+    - ../roles/grid_auth
 
   tasks:
     - name: delete
