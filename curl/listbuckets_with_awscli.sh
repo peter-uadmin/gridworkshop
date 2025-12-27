@@ -16,6 +16,6 @@ echo "copy/paste tenant id..."
 echo -n "tenant id: "
 read tenant
 #aws s3api --endpoint-url https://192.168.4.230:10443 --no-verify-ssl list-buckets  --profile grid
-aws s3api --endpoint-url https://192.168.4.230:10443 --no-verify-ssl list-buckets  --profile finance
+aws s3api --endpoint-url https://192.168.4.230:10446 --no-verify-ssl list-buckets  --profile finance
 
 

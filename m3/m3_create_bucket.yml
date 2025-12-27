@@ -1,5 +1,5 @@
 ---
-- name: Delete StorageGRID Bucket
+- name: Create StorageGRID Bucket
   hosts: localhost
   gather_facts: no
   collections:
@@ -11,17 +11,17 @@
   vars_prompt:
     - name: tenant_id
       prompt: "enter tenant id"
-      default: "default"
+      default: "06720005734697258898"
       private: no
 
     - name: user_name 
       prompt: "enter tenant root user name"
-      default: "default"
+      default: "root"
       private: no
 
     - name: user_pass 
       prompt: "enter tenant root user password "
-      default: "default"
+      default: "br@@mspun111"
       private: yes
 
     - name: bucket_name
@@ -30,6 +30,17 @@
       private: no
 
   tasks:
+    - name: Generate random suffix
+      set_fact:
+        my_r_s: "{{ 100000 | random }}"
+      run_once: true
+
+    - name: Generate random suffix only if user kept default
+      ansible.builtin.set_fact:
+        bucket_name: "{{ bucket_name }}-{{ 100000 | random }}"
+      when: bucket_name == 'default'
+
+
     - name: Get Grid Authorization Token
       uri:
         url: "https://192.168.4.230:443/api/v3/authorize"
