@@ -1,0 +1,35 @@
+# run with --extra-vars 'api_url=https://sg-admin.example.com validate_certs=false'
+---
+- name: Delete NetApp StorageGRID tenant account
+  hosts: localhost
+  gather_facts: no
+
+  vars_files:
+    - ../global_vars.yml
+
+#  vars_prompt:
+#    - name: tenant_name
+#      prompt: "enter tenant name"
+#      default: "default"
+#      private: no
+
+  roles:
+    - ../roles/grid_auth    # should set sg_token or similar
+
+  tasks:
+    - name: Get Grid Manager permissions for current admin user
+      netapp.storagegrid.na_sgrid_user_permissions:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        username: "{{ sg_admin_user | default('root') }}"
+        validate_certs: "{{ validate_certs | default(true) }}"
+      register: gm_perms
+
+    - name: Show effective permissions
+      ansible.builtin.debug:
+        var: gm_perms.effective_permissions
+
+    - name: Show full user object
+      ansible.builtin.debug:
+        var: gm_perms.user
+
