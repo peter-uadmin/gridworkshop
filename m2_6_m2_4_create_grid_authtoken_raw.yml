@@ -1,4 +1,6 @@
-#common way to retrieve a session authtoken
+#
+#get the tenant token using RAW APIr
+#
 ---
 - name: Get Grid Admin Auth Token
   hosts: localhost
