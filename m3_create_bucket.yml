@@ -6,7 +6,7 @@
     - netapp.storagegrid
 
   vars_files:
-    - ../global_vars.yml
+    - global_vars.yml
 
   vars_prompt:
     - name: tenant_id
