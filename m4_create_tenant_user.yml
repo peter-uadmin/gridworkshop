@@ -4,7 +4,7 @@
   gather_facts: false
 
   vars_files:
-    - ../global_vars.yml
+    - global_vars.yml
   vars_prompt:
     - name: new_user_name
       prompt: "username to create"
