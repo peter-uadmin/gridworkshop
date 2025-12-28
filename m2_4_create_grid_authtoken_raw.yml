@@ -1,4 +1,8 @@
-#common way to retrieve a session authtoken
+###########################
+#This play does not use a module but RAW API
+#The body format is json
+###########################
+
 ---
 - name: Get Grid Admin Auth Token
   hosts: localhost
@@ -13,7 +17,7 @@
     grid_username: "root"
     grid_password: "br@@mspun111"
 #
-#connect to endpoint ans use /api/v3/authorize
+#connect to endpoint and use /api/v3/authorize
 #
   tasks:
     - name: Get Grid Authorization Token
