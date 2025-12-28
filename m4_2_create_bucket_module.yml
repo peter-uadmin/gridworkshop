@@ -1,0 +1,67 @@
+####################
+#This play uses a random number if the default is unchanged
+###################
+---
+- name: Create StorageGRID Bucket
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "enter tenant id"
+      default: "06720005734697258898"
+      private: no
+
+    - name: user_name 
+      prompt: "enter tenant root user name"
+      default: "root"
+      private: no
+
+    - name: user_pass 
+      prompt: "enter tenant root user password "
+      default: "br@@mspun111"
+      private: yes
+
+    - name: bucket_name
+      prompt: "enter bucket name"
+      default: "default"
+      private: no
+
+  tasks:
+    - name: Generate random suffix
+      set_fact:
+        my_r_s: "{{ 100000 | random }}"
+      run_once: true
+
+    - name: Generate random suffix only if user kept default
+      ansible.builtin.set_fact:
+        bucket_name: "{{ bucket_name }}-{{ 100000 | random }}"
+      when: bucket_name == 'default'
+
+
+    - name: Get tenant auth token via sg_login
+      netapp.storagegrid.na_sg_grid_login:
+        hostname: "https://192.168.4.230" 
+        username: "{{ user_name }}"
+        password: "{{ user_pass }}"
+        tenant_id: "{{ tenant_id }}"      # this is your 20‑digit accountId
+        validate_certs: false
+      register: auth
+
+#    - name: Show login result
+#      debug:
+#        var: auth
+
+    - name: Create S3 Bucket
+      netapp.storagegrid.na_sg_org_container:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ auth.na_sa_token }}"
+        validate_certs: false
+        state: present 
+        name: "{{ bucket_name }}"
+        region: us-east-1
