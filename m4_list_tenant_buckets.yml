@@ -4,31 +4,22 @@
   gather_facts: no
 
   vars:
-    s3_endpoint: "https://s3.lb.example.com"   # StorageGRID S3 LB endpoint
-    s3_region: "us-east-1"                     # StorageGRID usually uses us-east-1
+    s3_endpoint: "http://192.168.4.230:10446"   # StorageGRID S3 LB endpoint s3_region: "us-east-1"                     # StorageGRID usually uses us-east-1
 
   vars_prompt:
-    - name: tenant_s3_access_key
-      prompt: "Enter tenant S3 access key"
-      private: yes
-
-    - name: tenant_s3_secret_key
-      prompt: "Enter tenant S3 secret key"
-      private: yes
+    - name: profile 
+      prompt: "Enter tenant profile"
+      private: no
 
   tasks:
-    - name: Build signed URL for ListBuckets (very simple V2-style)
-      set_fact:
-        listbuckets_query: "AWSAccessKeyId={{ tenant_s3_access_key }}&Action=ListBuckets"
+  - name: List buckets via tenant profile
+    ansible.builtin.command:
+      cmd: >
+        aws s3 ls
+        --profile "{{ profile }}"
+        --endpoint-url http://192.168.4.230:10446
+    register: aws_s3_output
 
-    - name: Call S3 ListBuckets (unauthenticated demo-style)
-      uri:
-        url: "{{ s3_endpoint }}/?{{ listbuckets_query }}"
-        method: GET
-        validate_certs: false
-      register: listbuckets_raw
-
-    - name: Show raw ListBuckets XML
-      debug:
-        var: listbuckets_raw.content
-
+  - name: Display buckets 
+    ansible.builtin.debug:
+      msg: "buckets: {{ aws_s3_output }}"
