@@ -1,4 +1,8 @@
-#common way to retrieve a session authtoken
+##########################################
+#This play create a token for a tenant
+#The difference with a grid token is 
+#the tenant id that is added as a variable
+##########################################
 ---
 - name: Get Grid Admin Auth Token
   hosts: localhost
@@ -35,11 +39,9 @@
 #
     - name: Display Auth using msg 
       ansible.builtin.debug:
-        msg: "Grid Auth: {{ auth }}" 
+        msg: "Grid Auth: {{ auth.na_sa_token }}" 
 
 #or
     - name : Display Auth using var 
       ansible.builtin.debug:
-        var: "Token: {{ auth }}"
-      
-     
+        var: "Token: {{ auth.na_sa_token }}"
