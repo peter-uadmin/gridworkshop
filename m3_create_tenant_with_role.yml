@@ -6,7 +6,7 @@
 
   vars:
   vars_files:
-    - ../global_vars.yml
+    - global_vars.yml
 
   vars_prompt:
     - name: tenant_name
@@ -26,3 +26,5 @@
         state: present
         name: "{{ tenant_name }}"
         protocol: "s3"
+        use_own_identity_source: no
+        allow_platform_services: no
