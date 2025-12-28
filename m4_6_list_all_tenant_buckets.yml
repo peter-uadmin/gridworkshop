@@ -1,0 +1,58 @@
+---
+- name: List StorageGRID tenant buckets via API
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    grid_endpoint: "https://192.168.4.230:443"
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "Enter tenant ID"
+      default: "06720005734697258898"
+      private: no
+
+    - name: tenant_root_user
+      prompt: "Enter tenant root username"
+      private: no
+      default: "root"
+
+    - name: tenant_root_pass
+      prompt: "Enter tenant root password"
+      default: "br@@mspun111"
+      private: yes
+
+  tasks:
+    - name: Get tenant auth token
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          accountId: "{{ tenant_id }}"
+          username: "{{ tenant_root_user }}"
+          password: "{{ tenant_root_pass }}"
+        validate_certs: false
+        status_code: [200]
+      register: auth
+
+    - name: Fail if token not found
+      fail:
+        msg: "Failed to get auth token: {{ auth.json }}"
+      when: auth.json.data is not defined
+
+    - name: List tenant buckets (GET /api/v3/org/containers)
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/org/containers"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ auth.json.data }}"
+          Accept: "application/json"
+        validate_certs: false
+        status_code: [200]
+      register: buckets
+
+    - name: Show buckets JSON
+      debug:
+        var: buckets.json
+
