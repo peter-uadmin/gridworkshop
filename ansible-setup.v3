@@ -9,12 +9,12 @@ chmod +x centos8_mirror_list_update
 #curl -k -o ansible-setup.v3  "http://uadmin.org/ansible-setup.v3"
 #
 #update or not
-echo -n "update os? (y/n)"
-read update
-if [ $update == "y" ]
-then
+#echo -n "update os? (y/n)"
+#read update
+#if [ $update == "y" ]
+#then
  dnf -y update
-fi
+#fi
 #vim
 echo "installing vim"
 dnf install -y vim
