@@ -1,6 +1,8 @@
 ###########################
 #This play does not use a module but RAW API
 #The body format is json
+#Also: this play uses validate_certs: true
+#So you need to have a certificate: 
 ###########################
 
 ---
@@ -27,7 +29,9 @@
         body: '{"username": "{{ grid_username }}", 
                 "password": "{{ grid_password }}"}'
         body_format: json
-        validate_certs: false
+        validate_certs: true 
+        #See m2_1_fetch_grid_pem.yml
+        ca_path: /root/gridworkshop/grid_admin.pem
         status_code: [200]
       register: auth
 #
