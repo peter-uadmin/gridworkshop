@@ -8,6 +8,9 @@
 #
 #define endpoint, user and pass
 #
+  vars_files: 
+    - global_vars.yml
+
   vars:
     grid_endpoint: "https://192.168.4.230:443"
     grid_username: "root"
@@ -24,7 +27,7 @@
                 "password": "{{ grid_password }}"}'
         body_format: json
         validate_certs: true
-        ca_path: "./m2_sgrid_admin.pem"
+        ca_path: "{{ playbookdir }}/grid_admin.pem"
         status_code: [200]
       register: auth
 #
