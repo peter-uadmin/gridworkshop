@@ -86,5 +86,5 @@ sed -i 's/127.0.0.1/0.0.0.0/' $HOME/.config/code-server/config.yaml
 clear
 echo "manually change the password in ~/.config/code-server/config.yaml"
 echo "then restart code-server : systemctl restart code-server@\$USER"
-
+echo "Now relogin or run: source $HOME/.bashrc"
 
