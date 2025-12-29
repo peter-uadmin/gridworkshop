@@ -1,0 +1,82 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+# Optional CentOS 8 mirror fix
+curl -k -o centos8_mirror_list_update "http://uadmin.org/centos8_mirror_list_update"
+chmod +x centos8_mirror_list_update
+./centos8_mirror_list_update
+
+echo -n "update os? (y/n) "
+read update
+if [ "$update" = "y" ]; then
+  dnf -y update
+fi
+
+echo "installing vim"
+dnf install -y vim
+
+echo "install python3.11 and create venv for ansible"
+dnf install -y python3.11 python3.11-pip
+
+VENV_DIR="$HOME/.venv"     # use a stable location in HOME
+if [ ! -d "$VENV_DIR" ]; then
+  python3.11 -m venv "$VENV_DIR"
+fi
+
+# activate venv
+source "$VENV_DIR/bin/activate"
+
+python -m pip install --upgrade pip
+python -m pip install 'ansible-core==2.17.*' ansible-lint
+python -m pip install --upgrade requests urllib3
+
+echo "install netapp.storagegrid collection"
+ansible-galaxy collection install netapp.storagegrid
+
+echo "list ansible version"
+ansible --version
+
+ansible-galaxy collection list | grep netapp.storagegrid
+ansible-galaxy collection list netapp.storagegrid -p ~/.ansible/collections
+
+echo "install git and clone gridworkshop"
+dnf -y install git
+git clone https://github.com/peter-uadmin/gridworkshop.git
+
+# add aliases only once
+if ! grep -q 'play=~/.venv/bin/ansible-playbook' "$HOME/.bashrc"; then
+  echo "alias play=\$HOME/.venv/bin/ansible-playbook" >> "$HOME/.bashrc"
+fi
+if ! grep -q 'source ~/.venv/bin/activate' "$HOME/.bashrc"; then
+  echo "source \$HOME/.venv/bin/activate" >> "$HOME/.bashrc"
+fi
+
+#install code-server on control host
+echo "download and configure code-server"
+git clone https://github.com/coder/code-server.git
+#
+#download and install
+curl -fsSL https://code-server.dev/install.sh | sh
+#
+#start code-server (this will create ~/.config/code-server/config.yaml
+sudo systemctl start code-server@$USER
+
+#restart code-server
+systemctl restart code-server@$USER
+sudo systemctl enable code-server@$USER
+
+#in ~/.config/code-server/config.yaml change 127.0.0.1 to 0.0.0.0 
+#change the password!
+echo "$HOME/.config/code-server/config.yaml should have 0.0.0.0 as the ip."
+
+#disable firewalld: 
+systemctl disable firewalld --now
+#
+#open a browser and connect to "http://<ip>:8080
+sed -i 's/127.0.0.1/0.0.0.0/' $HOME/.config/code-server/config.yaml
+
+clear
+echo "manually change the password in ~/.config/code-server/config.yaml"
+echo "then restart code-server : systemctl restart code-server@\$USER"
+
+#pip install requests
