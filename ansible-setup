@@ -1,5 +1,4 @@
 #!/usr/bin/bash
-set -euo pipefail
 
 # Optional CentOS 8 mirror fix
 curl -k -o centos8_mirror_list_update "http://uadmin.org/centos8_mirror_list_update"
