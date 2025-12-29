@@ -49,7 +49,7 @@ fi
 if ! grep -q 'source ~/.venv/bin/activate' "$HOME/.bashrc"; then
   echo "source \$HOME/.venv/bin/activate" >> "$HOME/.bashrc"
 fi
-echo "export ANSIBLE_CONFIG=/root/gridworkshop/config/ansible.cfg" >> $HOME/.bashrc
+echo "export ANSIBLE_CONFIG=/root/gridworkshop/ansible.cfg" >> $HOME/.bashrc
 
 #install code-server on control host
 echo "download and configure code-server"

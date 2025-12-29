@@ -1,5 +1,5 @@
 ####################
-#This play uses a random number if the default is unchanged
+#This play uses a random number if the default value for the bucketname is not modified is unchanged
 ###################
 ---
 - name: Create StorageGRID Bucket
@@ -35,12 +35,12 @@
   tasks:
     - name: Generate random suffix
       set_fact:
-        my_r_s: "{{ 100000 | random }}"
+        my_random: "{{ 100000 | random }}"
       run_once: true
 
     - name: Generate random suffix only if user kept default
       ansible.builtin.set_fact:
-        bucket_name: "{{ bucket_name }}-{{ 100000 | random }}"
+        bucket_name: "{{ bucket_name }}-{{ my_random }}"
       when: bucket_name == 'default'
 
 
