@@ -1,0 +1,7 @@
+#exercise 2 module2
+In m2_2_create_grid_authtoken_nocert.yml, validate_certs is set to false.
+Set it to true and make sure that the task can find the cert.
+
+       validate_certs: true 
+       ca_path: /root/gridworkshop/grid_admin.pem
+
