@@ -69,18 +69,22 @@ sudo systemctl enable code-server@$USER
 #change the password!
 echo "$HOME/.config/code-server/config.yaml should have 0.0.0.0 as the ip."
 
+#pip install requests
+source "$VENV_DIR/bin/activate"
+python3 -m pip install --upgrade pip
+python3 -m pip install awscli
+echo PATH=$PATH:/root/.venv/bin/ >> $HOME/.bashrc
+source $HOME/.bashrc
+
 #disable firewalld: 
 systemctl disable firewalld --now
 #
 #open a browser and connect to "http://<ip>:8080
 sed -i 's/127.0.0.1/0.0.0.0/' $HOME/.config/code-server/config.yaml
 
+
 clear
 echo "manually change the password in ~/.config/code-server/config.yaml"
 echo "then restart code-server : systemctl restart code-server@\$USER"
 
-#pip install requests
-source "$VENV_DIR/bin/activate"
-python3 -m pip install --upgrade pip
-python3 -m pip install awscli
 
