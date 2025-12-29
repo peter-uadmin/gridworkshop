@@ -1,0 +1,13 @@
+#exercise 1 module2
+In playbook m2_2_create_grid_authtoken_cert.yml, you show the respons data.
+Add another task that display all of the json response.
+And what happens if you show the complete response?
+
+ - name: Display Grid Admin Auth Token
+      debug:
+        msg: "Grid Admin Auth Token: {{ auth.json }}"
+
+ - name: Display Grid Admin Auth Token
+      debug:
+        msg: "Grid Admin Auth Token: {{ auth }}"
+
