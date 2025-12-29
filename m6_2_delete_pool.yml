@@ -1,0 +1,73 @@
+---
+- name: Create pool 
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.storagegrid
+
+
+  vars_prompt:
+    - name: grid_addr
+      prompt: "Grid admin address"
+      default: "192.168.4.230"
+      private: no
+    - name: grid_user
+      prompt: "Grid admin username"
+      default: "root"
+      private: no
+    - name: grid_pass
+      prompt: "Grid admin password"
+      default: "br@@mspun111"
+      private: yes
+    - name: pool_name
+      prompt: "Name of pool"
+      private: no
+
+
+  tasks:
+    - name: Get grid auth token
+      ansible.builtin.uri:
+        url: "https://{{ grid_addr }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          username: "{{ grid_user }}"
+          password: "{{ grid_pass }}"
+          cookie: false
+          csrfToken: false
+        headers:
+          Content-Type: "application/json"
+        validate_certs: false
+        status_code: 200
+      register: auth
+
+    - name: Set grid token
+      ansible.builtin.set_fact:
+        grid_token: "{{ auth.json.data }}"
+
+    - name: Display auth token
+      ansible.builtin.debug:
+        msg: 
+          - "Full auth response: {{ auth.json }}"
+          - "Token data: {{ auth.json.data }}"
+          - "Just the token: {{ auth.json.data }}"
+
+    - name: Create ILM pool
+      na_sg_grid_ilm_pool:
+        api_url: "https://{{ grid_addr }}"
+        auth_token: "{{ grid_token }}"
+        name: "{{ pool_name }}"
+        archives: []
+        validate_certs: false
+        state: absent
+#    - name: List ILM rules
+#      na_sg_grid_ilm_rule:
+#        url: "https://{{ grid_addr }}/api/v3/ilm/rules"
+#        auth_token: "{{ grid_token }}"
+#        state: present
+#      register: ilm_rules
+#
+#    - name: Show ILM rules
+#      ansible.builtin.debug:
+#        msg: "{{ ilm_rules.rules | map(attribute='name') | list }}"
+
