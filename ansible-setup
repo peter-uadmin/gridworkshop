@@ -80,3 +80,7 @@ echo "manually change the password in ~/.config/code-server/config.yaml"
 echo "then restart code-server : systemctl restart code-server@\$USER"
 
 #pip install requests
+
+echo installing awscli
+dnf install -y awscli
+
