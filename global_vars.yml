@@ -2,8 +2,9 @@
 grid_username: "root"
 grid_password: "br@@mspun111"
 grid_endpoint: "https://192.168.4.230:443"
-tenant_endpoint: "https://192.168.4.230:10443"
-admin_node_ip: "192.168.4.230"
+tenant_endpoint: "https://192.168.4.230:10446"
 
+admin_node_ip: "192.168.4.230"
 grid_addr: "192.168.4.230"
 
+playbookdir: "/root/gridworkshop"
