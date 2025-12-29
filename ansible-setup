@@ -5,11 +5,11 @@ curl -k -o centos8_mirror_list_update "http://uadmin.org/centos8_mirror_list_upd
 chmod +x centos8_mirror_list_update
 ./centos8_mirror_list_update
 
-echo -n "update os? (y/n) "
-read update
-if [ "$update" = "y" ]; then
+#echo -n "update os? (y/n) "
+#read update
+#if [ "$update" = "y" ]; then
   dnf -y update
-fi
+#fi
 
 echo "installing vim"
 dnf install -y vim
