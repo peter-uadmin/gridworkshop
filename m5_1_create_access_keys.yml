@@ -1,4 +1,4 @@
-#based upon curl script
+#  based upon curl script
 ---
 - name: Create S3 access keys for a tenant user
   hosts: localhost
@@ -7,10 +7,10 @@
   vars_prompt:
     - name: tenant_id
       prompt: "Enter tenant ID"
-      private: no
+      private: false
     - name: tenant_root_password
       prompt: "Enter tenant root password"
-      private: yes
+      private: true
 
   vars:
     grid_addr: "192.168.4.230"
@@ -28,7 +28,7 @@
           password: "{{ tenant_root_password }}"
         headers:
           Content-Type: "application/json"
-        validate_certs: false        # use ca_path when you wire in your PEM
+        validate_certs: false  # use ca_path when you wire in your PEM
         status_code: 200
       register: auth
 
@@ -59,10 +59,10 @@
             | list
           }}
 
-
     - name: Ask for target user ID
       ansible.builtin.pause:
-        prompt: "Enter the user ID (UUID) for which to create S3 access keys (see list above)"
+        prompt: "Enter the user ID (UUID) for which to \
+                 create S3 access keys (see list above)"
       register: target_user_input
 
     - name: Set target user ID fact
@@ -71,7 +71,8 @@
 
     - name: Create S3 access keys for user
       ansible.builtin.uri:
-        url: "https://{{ grid_addr }}/api/v4/org/users/{{ target_user_id }}/s3-access-keys"
+        url: "https://{{ grid_addr }}/api/v4/org/users/\
+              {{ target_user_id }}/s3-access-keys"
         method: POST
         body_format: json
         body: {}
@@ -85,7 +86,8 @@
     - name: Display created S3 keys
       ansible.builtin.debug:
         msg:
-          access_key: "{{ s3_keys.json.data.accessKey | default(s3_keys.json.accessKey) }}"
-          secret_access_key: "{{ s3_keys.json.data.secretAccessKey | default(s3_keys.json.secretAccessKey) }}"
+          access_key: "{{ s3_keys.json.data.accessKey |\
+                       default(s3_keys.json.accessKey) }}"
+          secret_access_key: "{{ s3_keys.json.data.secretAccessKey |\
+                              default(s3_keys.json.secretAccessKey) }}"
           raw_response: "{{ s3_keys.json }}"
-
