@@ -1,25 +1,20 @@
 ---
 - name: List StorageGRID tenant users via API
   hosts: localhost
-  gather_facts: no
-
+  gather_facts: false
   vars:
     grid_endpoint: "https://192.168.4.230:443"
-
   vars_prompt:
     - name: tenant_id
       prompt: "Enter tenant ID"
-      private: no
-
+      private: false
     - name: tenant_root_user
       prompt: "Enter tenant root username"
-      private: no
+      private: false
       default: "root"
-
     - name: tenant_root_pass
       prompt: "Enter tenant root password"
-      private: yes
-
+      private: true
   tasks:
     - name: Get tenant auth token
       uri:
@@ -33,12 +28,10 @@
         validate_certs: false
         status_code: [200]
       register: auth
-
     - name: Fail if token not found
       fail:
         msg: "Failed to get auth token: {{ auth.json }}"
       when: auth.json.data is not defined
-
     - name: List tenant users (GET /api/v3/org/users)
       uri:
         url: "{{ grid_endpoint }}/api/v3/org/users"
@@ -49,9 +42,6 @@
         validate_certs: false
         status_code: [200]
       register: users
-
     - name: Show users JSON
       debug:
         var: users.json
-
-
