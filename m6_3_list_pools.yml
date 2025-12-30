@@ -1,5 +1,5 @@
 ---
-- name: Create pool 
+- name: Create pool
   hosts: localhost
   gather_facts: false
   collections:
@@ -10,18 +10,18 @@
     - name: grid_addr
       prompt: "Grid admin address"
       default: "192.168.4.230"
-      private: no
+      private: false
     - name: grid_user
       prompt: "Grid admin username"
       default: "root"
-      private: no
+      private: false
     - name: grid_pass
       prompt: "Grid admin password"
       default: "br@@mspun111"
-      private: yes
+      private: true
     - name: pool_name
       prompt: "Name of pool"
-      private: no
+      private: false
 
 
   tasks:
@@ -47,7 +47,7 @@
 
     - name: Display auth token
       ansible.builtin.debug:
-        msg: 
+        msg:
           - "Full auth response: {{ auth.json }}"
           - "Token data: {{ auth.json.data }}"
           - "Just the token: {{ auth.json.data }}"
