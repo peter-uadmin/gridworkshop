@@ -1,10 +1,11 @@
 ####################
-#This play uses a random number if the default value for the bucketname is not modified is unchanged
+# This play uses a random number if the default
+# value for the bucketname is not modified is unchanged
 ###################
 ---
 - name: Create StorageGRID Bucket
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   collections:
     - netapp.storagegrid
 
@@ -15,22 +16,22 @@
     - name: tenant_id
       prompt: "enter tenant id"
       default: "06720005734697258898"
-      private: no
+      private: false
 
-    - name: user_name 
+    - name: user_name
       prompt: "enter tenant root user name"
       default: "root"
-      private: no
+      private: false
 
-    - name: user_pass 
+    - name: user_pass
       prompt: "enter tenant root user password "
       default: "br@@mspun111"
-      private: yes
+      private: true
 
     - name: bucket_name
       prompt: "enter bucket name"
       default: "default"
-      private: no
+      private: false
 
   tasks:
     - name: Generate random suffix
@@ -46,22 +47,22 @@
 
     - name: Get tenant auth token via sg_login
       netapp.storagegrid.na_sg_grid_login:
-        hostname: "https://192.168.4.230" 
+        hostname: "https://192.168.4.230"
         username: "{{ user_name }}"
         password: "{{ user_pass }}"
-        tenant_id: "{{ tenant_id }}"      # this is your 20‑digit accountId
+        tenant_id: "{{ tenant_id }}"
         validate_certs: false
       register: auth
 
-#    - name: Show login result
-#      debug:
-#        var: auth
+    # - name: Show login result
+    # debug:
+    # var: auth
 
     - name: Create S3 Bucket
       netapp.storagegrid.na_sg_org_container:
         api_url: "{{ grid_endpoint }}"
         auth_token: "{{ auth.na_sa_token }}"
         validate_certs: false
-        state: present 
+        state: present
         name: "{{ bucket_name }}"
         region: us-east-1
