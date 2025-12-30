@@ -2,19 +2,19 @@
 ---
 - name: Delete NetApp StorageGRID tenant account
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
 
   vars_files:
     - global_vars.yml
 
-#  vars_prompt:
-#    - name: tenant_name
-#      prompt: "enter tenant name"
-#      default: "default"
-#      private: no
+    # vars_prompt:
+    # - name: tenant_name
+    #     prompt: "enter tenant name"
+    #     default: "default"
+    #     private: false
 
   roles:
-    - ../roles/grid_auth    # should set sg_token or similar
+    - ../roles/grid_auth  # should set sg_token or similar
 
   tasks:
     - name: Get Grid Manager permissions for current admin user
@@ -32,4 +32,3 @@
     - name: Show full user object
       ansible.builtin.debug:
         var: gm_perms.user
-
