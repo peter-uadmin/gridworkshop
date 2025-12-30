@@ -1,0 +1,7 @@
+Create a new version: From raw api to na_sg_module
+the playbook m4_7_create_tenant_user.yml creates a tenantuser
+using RAW API.
+
+Using the module: netapp.storagegrid.na_sg_org_user from
+the collection. Please checkout the modules section in the /root/gridworkshop 
+and also look at an example like: m4_4_delete_bucket_with_role.yml
