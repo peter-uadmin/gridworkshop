@@ -7,20 +7,20 @@
     - name: grid_addr
       prompt: "Grid admin address"
       default: "192.168.4.230"
-      private: no
+      private: false
 
     - name: grid_user
       prompt: "Grid admin username"
       default: "root"
-      private: no
+      private: false
 
     - name: grid_pass
       prompt: "Grid admin password"
-      private: yes
+      private: true
 
     - name: tenant_id
       prompt: "Tenant ID to delete"
-      private: no
+      private: false
 
   tasks:
     - name: Get grid admin token
@@ -35,7 +35,7 @@
           csrfToken: false
         headers:
           Content-Type: "application/json"
-        validate_certs: false      # switch to ca_path with your PEM if desired
+        validate_certs: false # switch to ca_path with your PEM if desired
         status_code: 200
       register: auth
 
