@@ -30,7 +30,6 @@
                 "password": "{{ grid_password }}"}'
         body_format: json
         validate_certs: true 
-        #See m2_1_fetch_grid_pem.yml
         ca_path: /root/gridworkshop/grid_admin.pem
         status_code: [200]
       register: auth
