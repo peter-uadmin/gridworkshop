@@ -1,7 +1,7 @@
 ---
 - name: Delete StorageGRID Bucket
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   collections:
     - netapp.storagegrid
 
@@ -12,22 +12,22 @@
     - name: tenant_id
       prompt: "enter tenant id"
       default: "default"
-      private: no
+      private: false
 
     - name: user_name
       prompt: "enter tenant root user name"
       default: "root"
-      private: no
+      private: false
 
     - name: user_pass
       prompt: "enter tenant root user password"
       default: "br@@mspun111"
-      private: yes
+      private: true
 
     - name: bucket_name
       prompt: "enter bucket name to DELETE"
       default: "default"
-      private: no
+      private: false
 
   tasks:
     - name: Get Grid Authorization Token
