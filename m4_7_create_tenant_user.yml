@@ -10,19 +10,19 @@
       prompt: "username to create"
       default: "user1"
       private: "no"
-    - name: tenant_id 
+    - name: tenant_id
       prompt: "account_id"
-      default: "06720005734697258898" 
-      private: no
-    - name: tenant_user_name 
+      default: "06720005734697258898"
+      private: false
+    - name: tenant_user_name
       prompt: "tenant admin"
-      default: "root" 
-      private: no
-    - name: tenant_password 
+      default: "root"
+      private: false
+    - name: tenant_password
       prompt: "tenant_password"
-      default: "br@@mspun111" 
-      private: yes
-      
+      default: "br@@mspun111"
+      private: true
+     
   roles:
     - /root/gridworkshop/roles/tenant_auth
   tasks:
@@ -39,7 +39,7 @@
           Content-Type: "application/json"
         validate_certs: false
         status_code: 201
-      register: uniqueName 
+      register: uniqueName
 
     - name: Show result
       ansible.builtin.debug:
