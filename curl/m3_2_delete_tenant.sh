@@ -5,8 +5,7 @@ set -euo pipefail
 # 1) get grid info
 ADDR=192.168.4.230
 GRID_USER="root"              # grid admin
-echo -n "Grid Password: "
-read -s GRID_PASS
+GRID_PASS="br@@mspun111"
 echo
 
 # 2) Get grid admin token
@@ -20,8 +19,8 @@ token=$(curl -k -s -X POST "https://${ADDR}/api/v3/authorize" \
       }" | jq -r '.data')
 
 # 3) Get tenants
-echo -n "press enter to list all tenants: "
-read
+echo "listing tenants: "
+echo "---------------  "
 curl -s -X GET "https://192.168.4.230:443/api/v3/grid/accounts" -H "accept: application/json"  -H "Authorization: Bearer $token" -k  |jq -r '.data[] | "\(.name) \(.id)"'
 
 # 4) Paste ID

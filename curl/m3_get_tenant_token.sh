@@ -2,9 +2,9 @@
 
 echo "this lists all tenant ids,"
 echo "buffer an id and paste it."
-echo -n "press enter"
+echo -n "press enter: "
 read
-./3_get_tenant_ids.sh
+./m3_get_tenant_ids.sh
 echo -n "id: "
 read t_id
 export t_id

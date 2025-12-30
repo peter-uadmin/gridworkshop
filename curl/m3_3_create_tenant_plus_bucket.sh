@@ -1,4 +1,4 @@
-#take care the "here" part. Closing EOF must be on separate line with no trailing spaces
+#take care with the "here" part. Closing EOF must be on separate line with no trailing spaces
 ADDR=192.168.4.230
 GRID_USER="root"                 # grid admin
 GRID_PASS="br@@mspun111"
