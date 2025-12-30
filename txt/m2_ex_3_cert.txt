@@ -1,0 +1,5 @@
+In module2 we used a playbook to get a grid token (m2_2_create_grid_authtoken_nocert.yml).
+We also used a playbook to get a tenant token.    (m2_5_create_tenant_authtoken_module.yml) 
+And we saw an ad hoc command to get a grid token. (m2_0_ad_hoc_auth.sh) 
+
+Create an ad hoc command to get an tenant auth token.

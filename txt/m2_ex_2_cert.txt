@@ -5,3 +5,6 @@ Set it to true and make sure that the task can find the cert.
        validate_certs: true 
        ca_path: /root/gridworkshop/grid_admin.pem
 
+hint: use the m2_2_fetch_grid_pem.sh curl example from the curl directory
+      this curl command will store a grid_admin.pem /root/gridworkshop
+
