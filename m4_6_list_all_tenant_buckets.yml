@@ -55,4 +55,3 @@
     - name: Show buckets JSON
       debug:
         var: buckets.json
-
