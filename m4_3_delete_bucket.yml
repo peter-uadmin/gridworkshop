@@ -50,4 +50,3 @@
         validate_certs: false
         state: absent
         name: "{{ bucket_name }}"
-
