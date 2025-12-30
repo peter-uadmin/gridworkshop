@@ -5,7 +5,6 @@
   collections:
     - netapp.storagegrid
 
-
   vars_prompt:
     - name: grid_addr
       prompt: "Grid admin address"
@@ -22,7 +21,6 @@
     - name: pool_name
       prompt: "Name of pool"
       private: false
-
 
   tasks:
     - name: Get grid auth token
@@ -62,4 +60,3 @@
     - name: Show ILM storage pools
       ansible.builtin.debug:
         var: grid_info.storage_pools
-
