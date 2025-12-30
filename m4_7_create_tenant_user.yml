@@ -24,7 +24,7 @@
       private: true
 
   roles:
-    - /root/gridworkshop/roles/tenant_auth
+    - tenant_auth
   tasks:
     - name: Create tenant local user
       ansible.builtin.uri:
