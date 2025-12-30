@@ -1,7 +1,7 @@
 ---
 - name: Delete StorageGRID tenant user
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   collections:
     - netapp.storagegrid
 
@@ -11,20 +11,20 @@
   vars_prompt:
     - name: tenant_id
       prompt: "Enter tenant ID"
-      private: no
+      private: false
 
     - name: tenant_root_user
       prompt: "Enter tenant root username"
-      private: no
+      private: false
       default: "root"
 
     - name: tenant_root_pass
       prompt: "Enter tenant root password"
-      private: yes
+      private: true
 
     - name: user_simple_name
       prompt: "Enter tenant user name to DELETE (simple, e.g. jdoe)"
-      private: no
+      private: false
 
   tasks:
     - name: Get tenant auth token
