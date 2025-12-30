@@ -22,7 +22,7 @@
       prompt: "tenant_password"
       default: "br@@mspun111"
       private: true
-     
+
   roles:
     - /root/gridworkshop/roles/tenant_auth
   tasks:
