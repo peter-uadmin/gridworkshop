@@ -32,8 +32,6 @@
       netapp.storagegrid.na_sg_org_user:
         api_url: "{{ grid_endpoint }}"
         validate_certs: false
-
-        # Auth from your role
         auth_token: "{{ bearer_token }}"
 
         # User definition
