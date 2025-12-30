@@ -1,0 +1,28 @@
+In this lab you will work with variables in playbooks.
+
+1. Create a playbook that prompts for the following variables:
+
+	grid_endpoint
+	grid_user
+	grid_pass
+  
+   The playbook will display the results.
+
+Hints:
+	Start the playbook like this:
+     
+        ---
+	- name: Get Grid Admin Auth Token
+          hosts: localhost
+          gather_facts: false
+          collections:
+            - netapp.storagegrid
+
+
+	To display the variables, use:
+
+	   - name: Show result
+             ansible.builtin.debug:
+               msg: 
+                 variable: "{{ vari 
+                  
