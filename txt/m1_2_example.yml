@@ -1,0 +1,17 @@
+---
+- name: Get Grid Admin Auth Token
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - example_var.yml 
+
+  tasks:
+    - name: Show result
+      ansible.builtin.debug:
+        msg: 
+          grid_endpoint: "{{ grid_endpoint }}"
+          grid_user: "{{ grid_user }}"
+          grid_pass: "{{ grid_pass }}"

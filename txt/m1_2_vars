@@ -1,0 +1,14 @@
+In this lab you will work with an external varfile.
+
+Take the playbook from m1_1_vars and change it so that
+predefined variables get loaded.
+
+Hints:
+
+************************************************8
+
+Make use of the keyword "vars_files"
+
+Create a separate file that contains the variables.
+
+
