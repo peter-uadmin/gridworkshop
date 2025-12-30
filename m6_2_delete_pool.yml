@@ -5,7 +5,6 @@
   collections:
     - netapp.storagegrid
 
-
   vars_prompt:
     - name: grid_addr
       prompt: "Grid admin address"
@@ -22,7 +21,6 @@
     - name: pool_name
       prompt: "Name of pool"
       private: false
-
 
   tasks:
     - name: Get grid auth token
@@ -60,14 +58,12 @@
         archives: []
         validate_certs: false
         state: absent
-    # - name: List ILM rules
-    #   na_sg_grid_ilm_rule:
-    #     url: "https://{{ grid_addr }}/api/v3/ilm/rules"
-    #     auth_token: "{{ grid_token }}"
-    #     state: present
-    #   register: ilm_rules
-    #
-    # - name: Show ILM rules
-    #   ansible.builtin.debug:
-    #     msg: "{{ ilm_rules.rules | map(attribute='name') | list }}"
-
+# - name: List ILM rules
+#   na_sg_grid_ilm_rule:
+#   url: "https://{{ grid_addr }}/api/v3/ilm/rules"
+#   auth_token: "{{ grid_token }}"
+#   state: present
+#   register: ilm_rules
+# - name: Show ILM rules
+#   ansible.builtin.debug:
+#   msg: "{{ ilm_rules.rules | map(attribute='name') | list }}"
