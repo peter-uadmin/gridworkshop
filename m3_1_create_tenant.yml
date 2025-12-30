@@ -7,20 +7,20 @@
     - name: grid_addr
       prompt: "Grid admin address"
       default: "192.168.4.230"
-      private: no
+      private: false
     - name: grid_user
       prompt: "Grid admin username"
       default: "root"
-      private: no
+      private: false
     - name: grid_pass
       prompt: "Grid admin password"
-      private: yes
+      private: true
     - name: tenant_name
       prompt: "Tenant name"
-      private: no
+      private: false
     - name: tenant_root_pass
       prompt: "Tenant root password"
-      private: yes
+      private: true
 
   tasks:
     - name: Get grid auth token
