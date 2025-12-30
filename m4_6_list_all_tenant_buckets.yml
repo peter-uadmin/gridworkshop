@@ -1,7 +1,7 @@
 ---
 - name: List StorageGRID tenant buckets via API
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
 
   vars:
     grid_endpoint: "https://192.168.4.230:443"
@@ -10,17 +10,17 @@
     - name: tenant_id
       prompt: "Enter tenant ID"
       default: "06720005734697258898"
-      private: no
+      private: false
 
     - name: tenant_root_user
       prompt: "Enter tenant root username"
-      private: no
+      private: false
       default: "root"
 
     - name: tenant_root_pass
       prompt: "Enter tenant root password"
       default: "br@@mspun111"
-      private: yes
+      private: true
 
   tasks:
     - name: Get tenant auth token
