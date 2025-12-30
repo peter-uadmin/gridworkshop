@@ -1,7 +1,7 @@
 ---
 # ===========================
 # Playbook: generic_template.yml
-# Purpose : Demonstrate basic playbook structure and indentation
+# Purpose: Demonstrate basic playbook structure and indentation
 # ===========================
 
 - name: Generic example play
