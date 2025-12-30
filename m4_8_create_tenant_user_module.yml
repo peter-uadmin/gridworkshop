@@ -14,15 +14,15 @@
     - name: tenant_id
       prompt: "account_id"
       default: "06720005734697258898"
-      private: no
+      private: false
     - name: tenant_user_name
       prompt: "tenant admin"
       default: "root"
-      private: no
+      private: false
     - name: tenant_password
       prompt: "tenant_password"
       default: "br@@mspun111"
-      private: yes
+      private: true
 
   roles:
     - tenant_auth
