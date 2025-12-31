@@ -1,0 +1,18 @@
+# roles/tenant_user_pass/defaults/main.yml
+
+# From global_vars.yml
+grid_endpoint: "{{ grid_endpoint }}"
+grid_username: "{{ grid_username }}"
+grid_password: "{{ grid_password }}"
+
+# Token set by grid_auth role (tenant token or grid token, depending on your design)
+tenant_auth_token: "{{ bearer_token }}"
+
+# Target tenant account and user
+tenant_id: "{{ tenant_id }}"
+tenant_user_name: "{{ tenant_user }}"
+tenant_user_password: "{{ new_pass }}"
+
+# Always update password when role runs
+tenant_user_update_password: "always"
+
