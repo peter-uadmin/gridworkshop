@@ -36,8 +36,6 @@
 
     - name: list tenants
       debug:
-        msg: "id={{ item.id }}, name={{ item.name }}"
+        msg: "id={{ item.id }}"
       loop: "{{ tenant_response.json.data }}"
-      loop_control:
-        label: "{{ item.name }}"
 
