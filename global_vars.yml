@@ -1,10 +1,11 @@
 # storagegrid_credentials.yml
+#used for all root tasks
 grid_username: "root"
 grid_password: "br@@mspun111"
 grid_endpoint: "https://192.168.4.230:443"
+
+#for all tenants
 tenant_endpoint: "https://192.168.4.230:10446"
 
-admin_node_ip: "192.168.4.230"
-grid_addr: "192.168.4.230"
-
+  #
 playbookdir: "/root/gridworkshop"
