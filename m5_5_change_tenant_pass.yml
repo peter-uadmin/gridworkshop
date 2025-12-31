@@ -13,6 +13,9 @@
     - name: tenant_id
       prompt: Tenant id
       private: false
+    - name: tenant_name
+      prompt: Tenant name
+      default: finance
     - name: tenant_pass
       prompt: Tenant password
       private: true
@@ -27,11 +30,12 @@
         auth_token: "{{ bearer_token }}"
         validate_certs: false
         account_id: "{{ tenant_id }}"
+        name: "{{ tenant_name }}"
         password: "{{ tenant_pass }}"
         update_password: "always"
         state: "present"
-        name: "hr"
+          #        name: "hr"
         allow_platform_services: false
         use_own_identity_source: false
         protocol: s3
-      no_log: true  # to make sure the password is not logged
+      no_log: false  # to make sure the password is not logged
