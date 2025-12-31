@@ -19,10 +19,6 @@
         validate_certs: false
       register: auth
 
-    - name: Debug token response
-      debug:
-        var: auth.json
-
     - name: Set bearer token fact
       set_fact:
         bearer_token: "{{ auth.json.data }}"
@@ -42,3 +38,6 @@
       debug:
         msg: "id={{ item.id }}, name={{ item.name }}"
       loop: "{{ tenant_response.json.data }}"
+      loop_control:
+        label: "{{ item.name }}"
+
