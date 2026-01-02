@@ -4,6 +4,6 @@ curl -k -s \
   -d '{
     "username": "root",
     "password": "br@@mspun111",
-    "accountId": "06720005734697258898"
-     }'
+    "accountId": "18815655567777745228"
+     }' |jq -r '.data'
 
