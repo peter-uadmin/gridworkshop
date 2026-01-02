@@ -3,6 +3,7 @@
 grid_username: "root"
 grid_password: "br@@mspun111"
 grid_endpoint: "https://192.168.4.230:443"
+validate_certs: "false"
 
 #for all tenants
 tenant_endpoint: "https://192.168.4.230:10446"
