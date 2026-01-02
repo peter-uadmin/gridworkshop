@@ -2,7 +2,7 @@
 echo
 echo "all fields"
 echo
-curl -s -k -X POST "https://192.168.4.230:443/api/v3/authorize" \
+curl -s -k -X POST "https://192.168.4.230:443/api/v4/authorize" \
 -H "accept: application/json" \
 -H "Content-Type: application/json" \
 -d '{"username": "root", "password": "br@@mspun111"}'|jq -r 
@@ -14,5 +14,7 @@ echo
 curl -s -k -X POST "https://192.168.4.230:443/api/v3/authorize" \
 -H "accept: application/json" \
 -H "Content-Type: application/json" \
--d '{"username": "root", "password": "br@@mspun111"}'|jq -r '.data'
+-d '{"username": "root", 
+     "password": 
+     "br@@mspun111"}'|jq -r '.data'
 
