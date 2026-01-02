@@ -25,6 +25,10 @@
       prompt: "default service type"
       default: s3
       private: no
+    - name: state 
+      prompt: "present or absent (absent needs name and port)"
+      default: present
+      private: no
  
 
     # Optional: custom certificate; omit all three to use default certs
@@ -61,7 +65,7 @@
         api_url: "{{ grid_endpoint }}"
         auth_token: "{{ login.na_sa_token }}"
         validate_certs: "{{ validate_certs }}"
-        state: present
+        state: "{{ state }}" 
 
         display_name: "{{ lb_display_name }}"
         port: "{{ lb_port }}"
