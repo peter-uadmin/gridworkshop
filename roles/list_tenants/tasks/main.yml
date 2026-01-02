@@ -1,0 +1,49 @@
+---
+- name: Get bearer token from StorageGRID
+  uri:
+    url: "{{ grid_endpoint }}/api/v3/authorize"
+    method: POST
+    body_format: json
+    body:
+      username: "{{ grid_username }}"
+      password: "{{ grid_password }}"
+    status_code: 200
+    validate_certs: false
+  register: auth
+
+- name: Set bearer token fact
+  set_fact:
+    bearer_token: "{{ auth.json.data }}"
+  when: auth.json.data is defined
+
+- name: Get list of tenants from StorageGRID
+  uri:
+    url: "{{ grid_endpoint }}/api/v3/grid/accounts"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ bearer_token }}"
+      Accept: "application/json"
+    validate_certs: false
+  register: tenant_response
+
+- name: Display tenants (name and ID only)
+  debug:
+    msg: 
+      - "Tenant ID: {{ item.id }}"
+      - "Tenant Name: {{ item.name }}"
+      - "-----------------"
+  loop: "{{ tenant_response.json.data }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Set selected tenant ID fact
+  set_fact:
+    selected_tenant_id: "{{ selected_tenant_id | default(omit) }}"
+  when: selected_tenant_id is defined
+
+- name: Save full tenant list to localhost fact
+  set_fact:
+    all_tenants_list: "{{ tenant_response.json.data }}"
+  delegate_to: localhost
+  run_once: true
+
