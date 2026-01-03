@@ -1,0 +1,14 @@
+create file:
+hosts
+[localhost]
+127.0.0.1
+
+ansible localhost \
+  -m ansible.builtin.uri \
+  -a 'url=https://192.168.4.230:443/api/v3/grid/accounts \
+      method=GET \
+      headers={"Authorization":"a78cf773-82a3-4ff2-9a06-53def335ee66"} \
+      validate_certs=no \
+      return_content=yes' \
+  -i hosts 
+
