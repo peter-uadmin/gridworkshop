@@ -1,0 +1,46 @@
+options:
+    gather_subset:
+        type: list
+        elements: str
+        description:
+            - When supplied, this argument will restrict the information collected to a given subset.
+            - Either the info name or the REST API can be given.
+            - Possible values for this argument include
+            - C(grid_accounts_info) or C(grid/accounts)
+            - C(grid_alarms_info) or C(grid/alarms)
+            - C(grid_audit_info) or C(grid/audit)
+            - C(grid_compliance_global_info) or C(grid/compliance-global)
+            - C(grid_config_info) or C(grid/config)
+            - C(grid_config_management_info) or C(grid/config/management)
+            - C(grid_config_product_version_info) or C(grid/config/product-version)
+            - C(grid_deactivated_features_info) or C(grid/deactivated-features)
+            - C(grid_dns_servers_info) or C(grid/dns-servers)
+            - C(grid_domain_names_info) or C(grid/domain-names)
+            - C(grid_ec_profiles_info) or C(grid/ec-profiles)
+            - C(grid_expansion_info) or C(grid/expansion)
+            - C(grid_expansion_nodes_info) or C(grid/expansion/nodes)
+            - C(grid_expansion_sites_info) or C(grid/expansion/sites)
+            - C(grid_firewall_blocked_ports) or C(grid/firewall-blocked-ports)
+            - C(grid_firewall_external_ports) or C(grid/firewall-external-ports)
+            - C(grid_firewall_privileged_ips) or C(grid/firewall-privileged-ips)
+            - C(grid_grid_networks_info) or C(grid/grid-networks)
+            - C(grid_groups_info) or C(grid/groups)
+            - C(grid_ha_groups_info) or C(grid/ha-groups)
+            - C(grid_health_info) or C(grid/health)
+            - C(grid_health_topology_info) or C(grid/health/topology)
+            - C(grid_identity_source_info) or C(grid/identity-source)
+            - C(grid_ilm_criteria_info) or C(grid/ilm-criteria)
+            - C(grid_ilm_grade_site_info) or C(grid/ilm-grade-site)
+            - C(grid_ilm_grades_info) or C(grid/ilm-grades)
+            - C(grid_ilm_policies_info) or C(grid/ilm-policies)
+            - C(grid_ilm_rules_info) or C(grid/ilm-rules)
+            - C(grid_ilm_storage_pools_info) or C(grid/ilm-pools)
+            - C(grid_license_info) or C(grid/license)
+            - C(grid_load_balancer_endpoints_config_info) or C(grid/gateway-configs)
+            - C(grid_management_certificate_info) or C(grid/management-certificate)
+            - C(grid_network_topology_info) or C(grid/network-topology)
+            - C(grid_ntp_servers_info) or C(grid/ntp-servers)
+            - C(grid_recovery_available_nodes_info) or C(grid/recovery/available-nodes)
+            - C(grid_recovery_info) or C(grid/recovery)
+            - C(grid_regions_info) or C(grid/regions)
+            - C(grid_schemes_info) or C(grid/schemes)
