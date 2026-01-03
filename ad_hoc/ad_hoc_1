@@ -1,0 +1,12 @@
+create file: 
+hosts
+[localhost]
+127.0.0.1
+
+ansible localhost \
+  -m netapp.storagegrid.na_sg_grid_info \
+  -a 'api_url=https://192.168.4.230 \
+      auth_token=a78cf773-82a3-4ff2-9a06-53def335ee66 \
+      validate_certs=false \
+      gather_subset=grid_accounts_info' \
+  -i hosts
