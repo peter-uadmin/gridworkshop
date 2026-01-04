@@ -22,7 +22,6 @@
     - name: Show result
       ansible.builtin.debug:
         msg: 
-          #          - Variables set "{{ grid_endpoint }}"
          grid_endpoint: "{{ grid_endpoint }}"
          grid_user: "{{ grid_user }}"
          grid_pass: "{{ grid_pass }}"
