@@ -10,7 +10,7 @@
     grid_endpoint: "https://192.168.4.230:443"
     grid_username: "root"
     grid_password: "br@@mspun111"
-  # connect to endpoint ans use /api/v3/authorize
+  # connect to endpoint ans use the na_sg_grid_login module
   tasks:
     - name: Get Grid Authorization Token
       netapp.storagegrid.na_sg_grid_login:
