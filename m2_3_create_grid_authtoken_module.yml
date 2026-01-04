@@ -1,0 +1,45 @@
+#########################################################
+#set collections
+#Setting variables: ip  user password
+#task: get bearer token
+#the token is displayed by using msg:  
+#the token is displayed by using var: 
+#      
+---
+- name: Get Grid Admin Auth Token
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - netapp.storagegrid
+#
+#define endpoint, user and pass
+#
+  vars:
+    grid_endpoint: "https://192.168.4.230:443"
+    grid_username: "root"
+    grid_password: "br@@mspun111"
+#
+#connect to endpoint ans use na_sg_grid_login
+#
+  tasks:
+    - name: Get Grid Authorization Token
+      netapp.storagegrid.na_sg_grid_login:
+        hostname: "{{ grid_endpoint }}"
+        username: "{{ grid_username }}"
+        password: "{{ grid_password }}"
+        validate_certs: false
+      register: auth
+#
+#the module uses "na_sa_token" as the data field that contains
+#compare this to json.data
+#the token
+#
+    - name: Display Auth using msg 
+      ansible.builtin.debug:
+        msg: "Token: {{ auth.na_sa_token }}" 
+
+    - name : Display Auth using var 
+      ansible.builtin.debug:
+        var: "Token: {{ auth.na_sa_token }}"
+      
+     
