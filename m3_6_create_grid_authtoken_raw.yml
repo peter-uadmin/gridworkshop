@@ -1,0 +1,44 @@
+#
+# get the tenant token using RAW APIr
+#
+---
+- name: Get Grid Admin Auth Token
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.storagegrid
+  #
+  # define endpoint, user and pass
+  #
+  vars:
+    grid_endpoint: "https://192.168.4.230:443"
+    grid_username: "root"
+    grid_password: "br@@mspun111"
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "enter tenant id"
+      default: "06720005734697258898"
+      private: false
+
+  #
+  # connect to endpoint ans use /api/v3/authorize
+  #
+  tasks:
+    - name: Get Grid Authorization Token
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/authorize"
+        method: POST
+        body: '{"accountId": "{{ tenant_id }}",
+               "username": "{{ grid_username }}",
+               "password": "{{ grid_password }}"}'
+        body_format: json
+        validate_certs: false
+        status_code: [200]
+      register: auth
+    #
+    # the authtoken can be processes as auth.json.data (variable)
+    #
+    - name: Display Grid Admin Auth Token
+      ansible.builtin.debug:
+        msg: "Grid Admin Auth Token: {{ auth.json.data }}"
