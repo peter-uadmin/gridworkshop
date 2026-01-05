@@ -1,0 +1,46 @@
+# #########################################
+# This play create a token for a tenant
+# The difference with a grid token is
+# the tenant id that is added as a variable
+# #########################################
+---
+- name: Get Grid Admin Auth Token
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.storagegrid
+
+  # define endpoint, user and pass
+  vars:
+    grid_endpoint: "https://192.168.4.230:443"
+    tenant_username: "root"
+    tenant_password: "br@@mspun111"
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "enter tenant id"
+      default: "06720005734697258898"
+      private: false
+
+  # connect to endpoint ans use /api/v3/authorize
+
+  tasks:
+    - name: Get Grid Authorization Token
+      netapp.storagegrid.na_sg_grid_login:
+        tenant_id: "{{ tenant_id }}"
+        hostname: "{{ grid_endpoint }}"
+        username: "{{ tenant_username }}"
+        password: "{{ tenant_password }}"
+        validate_certs: false
+      register: auth
+
+    # the authtoken can be processes as auth.json.data (variable)
+
+    - name: Display Auth using msg
+      ansible.builtin.debug:
+        msg: "Grid Auth: {{ auth.na_sa_token }}"
+
+    # or
+    - name: Display Auth using var
+      ansible.builtin.debug:
+        var: "Token: {{ auth.na_sa_token }}"
