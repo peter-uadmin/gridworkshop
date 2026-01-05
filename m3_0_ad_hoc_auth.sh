@@ -1,0 +1,1 @@
+ansible localhost -m netapp.storagegrid.na_sg_grid_login   -a 'hostname=192.168.4.230 username=admin password=br@@mspun111 validate_certs=false'   -e 'ansible_python_interpreter=/usr/bin/python3.11'
