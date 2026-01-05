@@ -1,0 +1,28 @@
+---
+# ===========================
+# Playbook: generic_template.yml
+# Purpose: Demonstrate basic playbook structure and indentation
+# ===========================
+
+- name: Generic example play
+  hosts: localhost
+  gather_facts: false
+
+  # ---------------------------
+  # Play-level variables section
+  # ---------------------------
+  vars:
+    success_message: "Playbook executed successfully."
+
+  # ---------------------------
+  # Tasks section
+  # ---------------------------
+  tasks:
+
+    - name: Show start message
+      ansible.builtin.debug:
+        msg: "Starting generic_template playbook on {{ inventory_hostname }}"
+
+    - name: Report successful execution
+      ansible.builtin.debug:
+        msg: "{{ success_message }}"
