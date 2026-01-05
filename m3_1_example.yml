@@ -1,5 +1,6 @@
 ---
 - name: Get Grid Admin Auth Token
+  connection: local
   hosts: localhost
   gather_facts: false
   collections:

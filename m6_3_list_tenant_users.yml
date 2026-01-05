@@ -1,5 +1,6 @@
 ---
 - name: List StorageGRID tenant users via API
+  connection: local
   hosts: localhost
   gather_facts: false
   vars:

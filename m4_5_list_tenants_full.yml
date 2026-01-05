@@ -1,6 +1,7 @@
 # this playbook will list all tenants' data
 ---
 - name: List StorageGRID tenants
+  connection: local
   hosts: localhost
   gather_facts: false
 

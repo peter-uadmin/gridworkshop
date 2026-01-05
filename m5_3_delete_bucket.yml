@@ -1,5 +1,6 @@
 ---
 - name: Delete StorageGRID Bucket
+  connection: local
   hosts: localhost
   gather_facts: false
   collections:

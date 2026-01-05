@@ -1,5 +1,6 @@
 ---
 - name: list tenants 
+  connection: local
   hosts: localhost
   gather_facts: false
 
@@ -15,6 +16,7 @@
 
 
 - name: Change StorageGRID tenant root password
+  connection: local
   hosts: localhost
   gather_facts: false
 

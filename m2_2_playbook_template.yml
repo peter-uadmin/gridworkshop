@@ -5,6 +5,7 @@
 # ===========================
 
 - name: Generic example play
+  connection: local
   hosts: localhost
   gather_facts: false
 

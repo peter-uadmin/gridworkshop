@@ -1,6 +1,7 @@
 #  based upon curl script
 ---
 - name: Create S3 access keys for a tenant user
+  connection: local
   hosts: localhost
   gather_facts: false
 

@@ -5,6 +5,7 @@
 #
 ---
 - name: List StorageGRID tenant buckets via S3 API (uri)
+  connection: local
   hosts: localhost
   gather_facts: false
 

@@ -1,6 +1,7 @@
 ---
 # this playbook uses modules form the netapp.storagegrid collection
 - name: Get Grid Admin Auth Token
+  connection: local
   hosts: localhost
   gather_facts: false
   collections:

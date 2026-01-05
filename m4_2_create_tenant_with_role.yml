@@ -1,6 +1,7 @@
 #run with --extra-vars
 ---
 - name: Delete NetApp StorageGRID tenant account
+  connection: local
   hosts: localhost
   gather_facts: false
 

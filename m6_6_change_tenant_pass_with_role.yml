@@ -1,5 +1,6 @@
 ---
 - name: Change StorageGRID tenant root password
+  connection: local
   hosts: localhost
   gather_facts: false
 
