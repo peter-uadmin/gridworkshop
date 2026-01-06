@@ -2,13 +2,13 @@
 # this playbook uses ansible builtin modules like uri: and debug:
 # builtin modules are called ansible.builtin.<modulename>
 # but just the modulename is also accepted.
-# the use of the netapp.storagegrid collection is not needed here...but it cannot harm
+# the use of the netapp.storagegrid collection is not needed here.
 - name: Get Grid Admin Auth Token
   connection: local
   hosts: localhost
   gather_facts: false
   collections:
-        - netapp.storagegrid
+    - netapp.storagegrid
   # define endpoint, user and pass
   vars:
     grid_endpoint: "https://192.168.4.230:443"
