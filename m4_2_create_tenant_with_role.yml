@@ -5,7 +5,6 @@
   hosts: localhost
   gather_facts: false
 
-  vars:
   vars_files:
     - global_vars.yml
 
