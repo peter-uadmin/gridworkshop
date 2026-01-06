@@ -23,6 +23,6 @@
     - name: Show result
       ansible.builtin.debug:
         msg: 
-         grid_endpoint: "{{ grid_endpoint }}"
-         grid_user: "{{ grid_username }}"
-         grid_pass: "{{ grid_password }}"
+          grid_endpoint: "{{ grid_endpoint }}"
+          grid_user: "{{ grid_username }}"
+          grid_pass: "{{ grid_password }}"
