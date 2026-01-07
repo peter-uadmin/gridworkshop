@@ -5,10 +5,9 @@
 # ===========================
 
 - name: Generic example play
-  connection: local
   hosts: localhost
+  connection: local
   gather_facts: false
-
   # ---------------------------
   # Play-level variables section
   # ---------------------------
