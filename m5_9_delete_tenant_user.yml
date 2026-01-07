@@ -1,7 +1,7 @@
 ---
 - name: Delete StorageGRID tenant user
-  connection: local
   hosts: localhost
+  connection: local
   gather_facts: false
   collections:
     - netapp.storagegrid
