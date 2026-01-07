@@ -1,7 +1,7 @@
 ---
 - name: List StorageGRID tenant users via API
-  connection: local
   hosts: localhost
+  connection: local
   gather_facts: false
   vars:
     grid_endpoint: "https://192.168.4.230:443"
