@@ -1,7 +1,7 @@
 ---
 - name: List StorageGRID tenant buckets via API
-  connection: local
   hosts: localhost
+  connection: local
   gather_facts: false
 
   vars:
