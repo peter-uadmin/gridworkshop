@@ -4,8 +4,8 @@
 # but just the modulename is also accepted.
 # the use of the netapp.storagegrid collection is not needed here.
 - name: Get Grid Admin Auth Token
-  connection: local
   hosts: localhost
+  connection: local
   gather_facts: false
   collections:
     - netapp.storagegrid
