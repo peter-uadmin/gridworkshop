@@ -7,11 +7,13 @@
   collections:
     - netapp.storagegrid
   # define endpoint, user and pass
+
   vars:
     grid_endpoint: "https://192.168.4.230:443"
     grid_username: "root"
     grid_password: "br@@mspun111"
-  # connect to endpoint ans use the na_sg_grid_login module
+      #
+  # connect to endpoint and use the na_sg_grid_login module
   tasks:
     - name: Get Grid Authorization Token
       netapp.storagegrid.na_sg_grid_login:
@@ -20,13 +22,20 @@
         password: "{{ grid_password }}"
         validate_certs: false
       register: auth
+
     # the module uses "na_sa_token" as the data field that contains the token
     # compare this to the "json.auth.data" in the raw example
     - name: Display Auth using msg
       ansible.builtin.debug:
         msg: "Token: {{ auth.na_sa_token }}"
+        
     # Instead using msg: you can also create a variable you could use
     # further in the playbook
-    - name: Display Auth using var
+    - name: set fact. 
+      set_fact:
+        bearer_token: "{{ auth.na_sa_token }}"
+    - name: Display Auth using msg
       ansible.builtin.debug:
-        var: "Token: {{ auth.na_sa_token }}"
+        msg: "Token: {{ bearer_token }}"
+
+
