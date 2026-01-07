@@ -1,6 +1,5 @@
 ---
 - name: Fetch TLS cert from 192.168.4.230
-  connection: local
   hosts: localhost
 
   vars_files: global_vars.yml
