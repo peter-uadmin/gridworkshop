@@ -1,7 +1,7 @@
 ---
 - name: Delete StorageGRID tenant
-  connection: local
   hosts: localhost
+  connection: local
   gather_facts: false
 
   vars_prompt:
