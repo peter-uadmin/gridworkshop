@@ -1,7 +1,7 @@
 ---
 - name: Create StorageGRID tenant (minimal)
-  connection: local
   hosts: localhost
+  connection: local
   gather_facts: false
 
   vars_prompt:
