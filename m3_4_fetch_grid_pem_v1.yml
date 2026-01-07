@@ -1,0 +1,25 @@
+---
+- name: Fetch TLS cert from 192.168.4.230
+  hosts: localhost
+  vars_files: global_vars.yml
+  tasks:
+    - name: Create certs directory
+      file:
+        path: "{{ playbookdir }}/certs"
+        state: directory
+        mode: '0755'
+
+    - name: Save StorageGRID server certificate to grid_admin.pem
+      shell: |
+        openssl s_client \
+          -connect 192.168.4.230:443 \
+          -servername 192.168.4.230 \
+          -showcerts \
+          </dev/null 2>/dev/null \
+        | sed -n '0,/-----BEGIN CERTIFICATE-----/p; /-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p' \
+        | sed '/-----END CERTIFICATE-----/q' \
+        > "{{ playbookdir }}/certs/grid_admin.pem"
+      args:
+        creates: "{{ playbookdir }}/certs/grid_admin.pem"
+
+
