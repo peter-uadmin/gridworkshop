@@ -5,8 +5,8 @@
 # #########################################
 ---
 - name: Get Grid Admin Auth Token
-  connection: local
   hosts: localhost
+  connection: local
   gather_facts: false
   collections:
     - netapp.storagegrid
