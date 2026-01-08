@@ -1,0 +1,45 @@
+---
+- name: List StorageGRID tenants
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - global_vars.yml
+  tasks:
+    - name: Get bearer token from StorageGRID
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          username: "{{ grid_username }}"
+          password: "{{ grid_password }}"
+        status_code: 200
+        validate_certs: false
+      register: auth
+      no_log: true
+
+    - name: Set bearer token fact
+      set_fact:
+        bearer_token: "{{ auth.json.data }}"
+      no_log: true
+
+    - name: List all tenant accounts
+      netapp.storagegrid.na_sg_grid_info:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        gather_subset:
+          - grid_accounts_info
+      register: sg_info
+      no_log: true
+
+    - name: Create tenant name-to-ID mapping (silent)
+      set_fact:
+        tenant_map: "{{ dict(sg_info.sg_info['grid/accounts'].data | 
+     map(attribute='name') | zip(sg_info.sg_info['grid/accounts'].data | 
+     map(attribute='id'))) }}"
+
+    - name: Show mapping
+      debug:
+        var: tenant_map
