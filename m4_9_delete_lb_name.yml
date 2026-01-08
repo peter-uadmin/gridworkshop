@@ -1,0 +1,29 @@
+---
+- name: Delete Gateway Endpoint by name/port
+  hosts: localhost
+  gather_facts: false
+
+  vars_files:
+    - global_vars.yml
+
+  vars_prompt:
+    - name: name
+      prompt: name
+      private: no
+    - name: port
+      prompt: port
+      private: no
+
+  roles:
+    - grid_auth
+
+  tasks:
+    - name: Delete gateway endpoint "App Endpoint 2" on port 10502
+      netapp.storagegrid.na_sg_grid_gateway:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        display_name: "{{ name }}"
+        port: "{{ port }}"
+        state: absent
+        validate_certs: false
+
