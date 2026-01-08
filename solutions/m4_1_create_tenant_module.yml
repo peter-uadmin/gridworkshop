@@ -18,14 +18,14 @@
   tasks:
     - name: Set grid token
       ansible.builtin.set_fact:
-        grid_token: "{{ auth.json.data }}"
+        grid_token: "{{ auth.na_sa_token }}"
 
     - name: create a tenant account
       netapp.storagegrid.na_sg_grid_account:
         api_url: "{{ grid_endpoint }}"
         auth_token: "{{ grid_token }}"
         validate_certs: false
-        state: present
+        state: present 
         name: "{{ tenant_name }}" 
         protocol: s3
         management: true
@@ -33,4 +33,4 @@
         allow_platform_services: false
         password: "{{ tenant_password }}"
         quota_size: 0
-      no_log: true
+          # no_log: true
