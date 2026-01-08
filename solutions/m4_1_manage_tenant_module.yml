@@ -8,12 +8,12 @@
     - myvars.yml
 
   vars_prompt:
-    - name: tenant_password 
-      prompt: "Tenant root password"
-      private: true
     - name: state
       prompt: "present / absent"
       private: no
+    - name: tenant_password 
+      prompt: "Tenant root password (only when creating a tenant) "
+      private: true
 
   roles:
     - grid_token
