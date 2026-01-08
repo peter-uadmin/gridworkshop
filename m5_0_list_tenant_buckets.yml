@@ -1,0 +1,31 @@
+########
+# for this you have to install and configure awscli
+# (yum install awscli; aws configure.)
+# The profile will need access and secret key
+#
+---
+- name: List StorageGRID tenant buckets via S3 API (uri)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    s3_endpoint: "http://192.168.4.230:10446"
+
+  vars_prompt:
+    - name: profile
+      prompt: "Enter tenant profile"
+      private: false
+
+  tasks:
+    - name: List buckets via tenant profile
+      ansible.builtin.command:
+        cmd: >
+          aws s3 ls
+          --profile "{{ profile }}"
+          --endpoint-url http://192.168.4.230:10446
+      register: aws_s3_output
+
+    - name: Display buckets
+      ansible.builtin.debug:
+        msg: "buckets: {{ aws_s3_output }}"
