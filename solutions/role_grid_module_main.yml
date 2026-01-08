@@ -1,0 +1,12 @@
+---
+#
+#This main.yml can replace the URI version
+#
+- name: Get Grid Authorization Token
+  netapp.storagegrid.na_sg_grid_login:
+    hostname: "{{ grid_endpoint }}"
+    username: "{{ grid_username }}"
+    password: "{{ grid_password }}"
+    validate_certs: false
+  register: auth
+#note: instead of auth.json.data, you should now use auth.na_sa_token in the playbook.
