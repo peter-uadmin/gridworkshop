@@ -20,7 +20,7 @@
       private: false
     - name: grid_password
       prompt: password
-      default: Netapp1! 
+      default: ------ 
       private: true
   tasks:
     - name: Show result
