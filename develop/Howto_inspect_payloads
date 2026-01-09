@@ -1,0 +1,4 @@
+    - name: Inspect org/users payload
+      debug:
+        var: sg_info.sg_info['org/users']
+
