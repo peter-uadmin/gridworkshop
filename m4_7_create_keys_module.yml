@@ -1,0 +1,82 @@
+---
+- name: Create S3 access keys for a tenant user
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "Enter tenant ID"
+      default: "18815655567777745228"
+      private: false
+    - name: "tenant_admin_user"
+      prompt: "Enter tenant admin user"
+      default: "root"
+      private: false
+    - name: "tenant_admin_user_password"
+      prompt: "Enter tenant admin user password"
+      default: "br@@mspun111"
+      private: true
+
+  vars:
+    grid_endpoint: "https://192.168.4.230:443"
+    tenant_root_user: "root"
+
+  roles:
+    - tenant_auth
+  tasks:
+
+    - name: List tenant users
+      netapp.storagegrid.na_sg_org_info:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        gather_subset:
+          - org_users_info
+      register: sg_info
+    - name: Inspect org/users payload
+      debug:
+        var: sg_info.sg_info['org/users']
+
+    - name: user-to-id mapping
+      set_fact:
+        user_map: "{{ dict(sg_info.sg_info['org/users'].data |
+     map(attribute='fullName') | zip(sg_info.sg_info['org/users'].data |
+     map(attribute='id'))) }}"     
+
+    - name: show mapping
+      debug:
+        var: user_map
+
+    - name: Ask for target user ID
+      ansible.builtin.pause:
+        prompt: "Enter the user ID (UUID) for which to \
+                 create S3 access keys (see list above)"
+      register: target_user_input
+
+    - name: Set target user ID fact
+      ansible.builtin.set_fact:
+        target_user_id: "{{ target_user_input.user_input }}"
+
+    - name: Create S3 access keys for user
+      ansible.builtin.uri:
+        url: "{{ grid_endpoint }}/api/v4/org/users/\
+              {{ target_user_id }}/s3-access-keys"
+        method: POST
+        body_format: json
+        body: {}
+        headers:
+          Authorization: "Bearer {{ bearer_token }}"
+          Content-Type: "application/json"
+        validate_certs: false
+        status_code: 201
+      register: s3_keys
+
+    - name: Display created S3 keys
+      ansible.builtin.debug:
+        msg:
+          access_key: "{{ s3_keys.json.data.accessKey |\
+                       default(s3_keys.json.accessKey) }}"
+          secret_access_key: "{{ s3_keys.json.data.secretAccessKey |\
+                              default(s3_keys.json.secretAccessKey) }}"
+          raw_response: "{{ s3_keys.json }}"
