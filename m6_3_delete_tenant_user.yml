@@ -14,37 +14,30 @@
       prompt: "Enter tenant ID"
       private: false
 
-    - name: tenant_root_user
-      prompt: "Enter tenant root username"
+    - name: tenant_admin_user
+      prompt: "Enter tenant admin username"
+      default: root
       private: false
       default: "root"
 
-    - name: tenant_root_pass
-      prompt: "Enter tenant root password"
+    - name: tenant_admin_user_password
+      prompt: "Enter tenant admin password"
+      default: br@@mspun111
       private: true
 
     - name: user_simple_name
-      prompt: "Enter tenant user name to DELETE (simple, e.g. jdoe)"
+      prompt: "Enter tenant user name to DELETE (simple, e.g. wilma)"
       private: false
 
+  roles:
+    - tenant_auth
+
   tasks:
-    - name: Get tenant auth token
-      uri:
-        url: "{{ grid_endpoint }}/api/v3/authorize"
-        method: POST
-        body_format: json
-        body:
-          accountId: "{{ tenant_id }}"
-          username: "{{ tenant_root_user }}"
-          password: "{{ tenant_root_pass }}"
-        validate_certs: false
-        status_code: [200]
-      register: auth
 
     - name: Delete tenant user
       netapp.storagegrid.na_sg_org_user:
         api_url: "{{ grid_endpoint }}"
-        auth_token: "{{ auth.json.data }}"
+        auth_token: "{{ bearer_token }}"
         validate_certs: false
         state: absent
         unique_name: "user/{{ user_simple_name }}"
