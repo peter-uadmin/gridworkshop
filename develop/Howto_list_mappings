@@ -1,0 +1,19 @@
+1 inspect payload attributes
+
+    - name: Inspect org/users payload
+      debug:
+        var: sg_info.sg_info['org/users']
+
+
+2 map some of the attributes
+
+    - name: user-to-id mapping
+      set_fact:
+        user_map: "{{ dict(sg_info.sg_info['org/users'].data |
+     map(attribute='fullName') | zip(sg_info.sg_info['org/users'].data |
+     map(attribute='id'))) }}"
+
+    - name: show mapping
+      debug:
+        var: user_map
+
