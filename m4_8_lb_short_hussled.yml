@@ -1,0 +1,44 @@
+---
+  vars_files:
+    - global_vars.yml
+
+    - name: Create LB name-to-port mapping
+      set_fact:
+        lb_port_map: "{{ dict(
+                          sg_grid_info.sg_info['grid/gateway-configs'].data
+                          | map(attribute='displayName')
+                          | zip(
+                              sg_grid_info.sg_info['grid/gateway-configs'].data
+                              | map(attribute='port')
+                            )
+                        ) }}"
+
+  roles:
+    - grid_auth
+
+  tasks:
+
+    - name: Get all load balancer endpoints
+      netapp.storagegrid.na_sg_grid_info:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        gather_subset:
+          - grid_load_balancer_endpoints_config_info
+      register: sg_grid_info
+
+- name: List StorageGRID load balancer endpoints
+  hosts: localhost
+  gather_facts: false
+  collections:
+    netapp.storagegrid
+  
+    - name: Show lb
+      debug:
+        msg: "{{ item.key }}:{{ item.value }}"
+      loop: "{{ lb_port_map | dict2items }}"
+  
+  vars:
+    sg_username: "root"
+    sg_password: "br@@mspun111"
+    validate_certs: false
