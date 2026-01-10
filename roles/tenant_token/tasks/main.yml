@@ -1,0 +1,18 @@
+- name: Get tenant bearer token
+  ansible.builtin.uri:
+    url: "{{ grid_endpoint }}/api/v3/authorize"
+    method: POST
+    body_format: json
+    body:
+      accountId: "{{ tenant_id }}"
+      username: "{{ tenant_root_user }}"
+      password: "{{ tenant_root_password }}"
+    headers:
+      Content-Type: "application/json"
+    validate_certs: false  # use ca_path when you wire in your PEM
+    status_code: 200
+  register: auth
+
+- name: Extract bearer token
+  ansible.builtin.set_fact:
+    bearer_token: "{{ auth.json.data }}"
