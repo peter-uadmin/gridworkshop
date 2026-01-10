@@ -18,13 +18,13 @@
         validate_certs: false
         gather_subset:
           - grid_accounts_info
-      register: sg_info
+      register: sg_grid_info
       no_log: true
 
     - name: Create tenant name-to-ID mapping 
       set_fact:
-        tenant_map: "{{ dict(sg_info.sg_info['grid/accounts'].data | 
-     map(attribute='name') | zip(sg_info.sg_info['grid/accounts'].data | 
+        tenant_map: "{{ dict(sg_grid_info.sg_info['grid/accounts'].data | 
+     map(attribute='name') | zip(sg_grid_info.sg_info['grid/accounts'].data | 
      map(attribute='id'))) }}"
 
     - name: Show mapping
