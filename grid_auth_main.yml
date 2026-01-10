@@ -1,0 +1,12 @@
+- name: Get Grid Authorization token
+  netapp.storagegrid.na_sg_grid_login:
+    hostname: "{{ grid_endpoint }}"        # e.g. https://sgadmin.example.com
+    username: "{{ grid_username }}"        # e.g. root
+    password: "{{ grid_password }}"
+    validate_certs: false
+  register: auth
+  no_log: true
+
+- name: Expose token as bearer_token
+  set_fact:
+    bearer_token: "{{ auth.na_sa_token }}"
