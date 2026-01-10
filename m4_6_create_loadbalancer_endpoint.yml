@@ -1,14 +1,18 @@
 ---
+# start of play
 - name: Create StorageGRID load balancer endpoint
   hosts: localhost
   connection: local
   gather_facts: false
+# use storagegrid collection
   collections:
     - netapp.storagegrid
 
+# use global_variables file
   vars_files:
     - global_vars.yml
 
+# Enter values for load balancer
   vars_prompt:
     - name: lb_display_name 
       prompt: "display name"
@@ -31,41 +35,27 @@
       default: present
       private: no
  
-
-    # Optional: custom certificate; omit all three to use default certs
-    #    lb_server_certificate: |
-    #  -----BEGIN CERTIFICATE-----
-    #  YOUR-CERT-HERE
-    #  -----END CERTIFICATE-----
-    #lb_private_key: |
-    #  -----BEGIN PRIVATE KEY-----
-    #  YOUR-KEY-HERE
-    #  -----END PRIVATE KEY-----
-    #lb_ca_bundle: ""   # or a PEM bundle
-
   tasks:
 
+# get auth token, we are not using a role
     - name: Get StorageGRID auth token
       netapp.storagegrid.na_sg_grid_login:
         hostname: "{{ grid_endpoint }}"
         username: "{{ grid_username }}"
         password: "{{ grid_password }}"
         validate_certs: false
+# this will store what the na_sg_grid_login module returns in the variable login
       register: login 
 
-        #    - name: Get StorageGRID auth token
-        #na_sg_grid_login:
-        #sg_api_url: "{{ grid_endpoint }}"
-        #username: "{{ grid_username }}"
-        #password: "{{ grid_password }}"
-        #validate_certs: "{{ validate_certs }}"
-        #register: login
 
     - name: Create/ensure S3 HTTPS load balancer endpoint
       netapp.storagegrid.na_sg_grid_gateway:
         api_url: "{{ grid_endpoint }}"
+
+# this will store the na_sa_token value in the variable auth_token
         auth_token: "{{ login.na_sa_token }}"
         validate_certs: "{{ validate_certs }}"
+# state is present or absent
         state: "{{ state }}" 
 
         display_name: "{{ lb_display_name }}"
@@ -73,15 +63,12 @@
         secure: "{{ lb_secure }}"
         default_service_type: "{{ lb_default_service_type }}"
 
-        # global binding (default) – listens on all eligible nodes
+# global binding (default) – listens on all eligible nodes
         binding_mode: global
 
-        # comment these three lines out to use default certificates
-        #server_certificate: "{{ lb_server_certificate }}"
-        #private_key: "{{ lb_private_key }}"
-        #ca_bundle: "{{ lb_ca_bundle | default(omit) }}"
+# store all the return values in the variable lb_endpoint
       register: lb_endpoint
 
+# show the contents of lb_endpoint.resp
     - debug:
         var: lb_endpoint.resp
-
