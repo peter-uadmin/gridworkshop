@@ -1,0 +1,15 @@
+    - name: Create LB name-to-port mapping
+      set_fact:
+        lb_port_map: "{{ dict(
+                          sg_grid_info.sg_info['grid/gateway-configs'].data
+                          | map(attribute='displayName')
+                          | zip(
+                              sg_grid_info.sg_info['grid/gateway-configs'].data
+                              | map(attribute='port')
+                            )
+                        ) }}"
+ 
+    - name: Show lb
+      debug:
+        msg: "{{ item.key }}:{{ item.value }}"
+      loop: "{{ lb_port_map | dict2items }}"
