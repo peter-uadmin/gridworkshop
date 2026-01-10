@@ -12,7 +12,7 @@
   vars_files:
     - global_vars.yml
 
-# Enter values for load balancer
+# prompt user for load balancer endpoint parameters
   vars_prompt:
     - name: lb_display_name 
       prompt: "display name"
@@ -24,7 +24,7 @@
       private: "no"
     - name: lb_secure
       prompt: "HTTPS"
-      default: "false"
+      default: "false" #boolean "true/false"
       private: "no"
     - name: lb_default_service_type
       prompt: "default service type"
@@ -52,7 +52,8 @@
       netapp.storagegrid.na_sg_grid_gateway:
         api_url: "{{ grid_endpoint }}"
 
-# this will store the na_sa_token value in the variable auth_token
+# “pass the authentication token from the login task (login.na_sa_token) 
+# to the module’s auth_token parameter.”
         auth_token: "{{ login.na_sa_token }}"
         validate_certs: "{{ validate_certs }}"
 # state is present or absent
@@ -69,6 +70,6 @@
 # store all the return values in the variable lb_endpoint
       register: lb_endpoint
 
-# show the contents of lb_endpoint.resp
+# show API response for debugging.
     - debug:
         var: lb_endpoint.resp
