@@ -1,6 +1,6 @@
 #run with --extra-vars
 ---
-- name: Delete NetApp StorageGRID tenant account
+- name: Create NetApp StorageGRID tenant account
   hosts: localhost
   connection: local
   gather_facts: false
@@ -15,10 +15,10 @@
       private: false
 
   roles:
-    - grid_auth
+    - g_auth
 
   tasks:
-    - name: delete
+    - name: create
       netapp.storagegrid.na_sg_grid_account:
         api_url: "{{ grid_endpoint }}"
         auth_token: "{{ bearer_token }}"
