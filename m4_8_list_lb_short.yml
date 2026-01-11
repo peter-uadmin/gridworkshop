@@ -14,12 +14,17 @@
     - global_vars.yml
 
 
-    - name: Show mapping
-      # show the contents of lb_map
-      debug:
-        var: lb_map
-
   tasks:
+
+
+    - name: map name and port
+      set_fact:
+        # store a dict mapping displayName to id for all 
+        # load balancer endpoints in lb_map
+        lb_map: "{{ dict(sg_grid_info.sg_info['grid/gateway-configs'].data | 
+           map(attribute='displayName') | zip(sg_grid_info.sg_info['grid/gateway-configs'].data | 
+           map(attribute='port'))) }}"
+
 
     - name: Get all load balancer endpoints
       netapp.storagegrid.na_sg_grid_info:
