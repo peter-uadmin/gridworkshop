@@ -21,6 +21,7 @@
 
     - name: grid_pass
       prompt: "enter GRID admin password"
+      default: "br@@mspun111"
       private: true
 
   tasks:
@@ -30,16 +31,21 @@
         username: "{{ grid_user }}"
         password: "{{ grid_pass }}"
         validate_certs: false
-      register: grid_auth
+      register: auth
+
+    - name: bearer_token
+      set_fact:
+        bearer_token: "{{ auth.na_sa_token }}"
 
     - name: List tenants (accounts)
       netapp.storagegrid.na_sg_grid_info:
         api_url: "https://192.168.4.230"
-        auth_token: "{{ grid_auth.na_sa_token }}"
+        auth_token: "{{ bearer_token }}"
         validate_certs: false
         gather_subset:
           - grid_accounts_info
-      register: data
+      register: data 
+
 
     - name: Show tenant IDs and names
       debug:
@@ -90,7 +96,6 @@
         bucket_name: "{{ bucket_name }}-{{ my_random }}"
       when: bucket_name == 'default'
 
-
     - name: Get tenant auth token via sg_login
       netapp.storagegrid.na_sg_grid_login:
         hostname: "https://192.168.4.230"
@@ -100,14 +105,18 @@
         validate_certs: false
       register: auth
 
-    # - name: Show login result
+    - name: bearer_token
+      set_fact:
+        bearer_token: "{{ auth.na_sa_token }}" 
+     #bearer_token: "{{ auth.na_sa_token }}"
+# - name: Show login resultae
     # debug:
     # var: auth
 
     - name: Create S3 Bucket
       netapp.storagegrid.na_sg_org_container:
         api_url: "{{ grid_endpoint }}"
-        auth_token: "{{ auth.na_sa_token }}"
+        auth_token: "{{ bearer_token }}"
         validate_certs: false
         state: present
         name: "{{ bucket_name }}"
