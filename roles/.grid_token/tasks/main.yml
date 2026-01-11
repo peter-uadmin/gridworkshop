@@ -1,0 +1,12 @@
+- name: Get grid auth token
+  netapp.storagegrid.na_sg_grid_login:
+    hostname: "https://192.168.4.230"
+    username: "{{ grid_user }}"
+    password: "{{ grid_pass }}"
+    validate_certs: false
+  register: auth
+
+- name: bearer_token
+  set_fact:
+    bearer_token: "{{ auth.na_sa_token }}"
+
