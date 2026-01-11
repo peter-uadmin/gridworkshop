@@ -1,0 +1,39 @@
+---
+
+
+  roles:
+    - grid_auth
+
+    - name: map name and port
+      set_fact:
+        # store a dict mapping displayName to id for 
+        # all load balancer endpoints in lb_map
+        lb_map: "{{ dict(sg_grid_info.sg_info['grid/gateway-configs'].data | 
+           map(attribute='displayName') | zip(sg_grid_info.sg_info['grid/gateway-configs'].data | 
+           map(attribute='port'))) }}"
+  tasks:
+
+    - name: Get all load balancer endpoints
+      netapp.storagegrid.na_sg_grid_info:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        gather_subset:
+          - grid_load_balancer_endpoints_config_info
+      register: sg_grid_info
+      # the registered data in sg_grid_info will be used in the next task
+
+
+- name: List StorageGRID load balancer endpoints
+  hosts: localhost
+  gather_facts: false
+  collections:
+    netapp.storagegrid
+
+    - name: Show mapping
+      # show the contents of lb_map
+      debug:
+        var: lb_map
+
+  vars_files:
+    - global_vars.yml
