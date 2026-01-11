@@ -1,9 +1,10 @@
 ---
 - name: List StorageGRID load balancer endpoints
   hosts: localhost
+  connection: local
   gather_facts: false
 
-#set variables needed.
+# set variables needed.
   vars:
     sg_api_url: "https://192.168.4.230:443"   # e.g. https://sg-admin01.example.com
     sg_username: "root"
@@ -11,7 +12,7 @@
     validate_certs: false
 
   tasks:
-#authorize
+# authorize
     - name: Get auth token
       uri:
         url: "{{ sg_api_url }}/api/v4/authorize"
@@ -23,12 +24,12 @@
           password: "{{ sg_password }}"
         return_content: true
       register: auth_resp
-#fill variable sg_auth_token  
+# fill variable sg_auth_token  
     - name: Set auth token fact
       set_fact:
         sg_auth_token: "{{ auth_resp.json.data }}"
 
-#use raw api and bearer token
+# use raw api and bearer token
     - name: Get all load balancer endpoints
       uri:
         url: "{{ sg_api_url }}/api/v4/private/gateway-configs"
@@ -37,17 +38,17 @@
         headers:
           Authorization: "Bearer {{ sg_auth_token }}"
         return_content: true
-#store in lb_resp
+# store in lb_resp
       register: lb_resp
 
-#store data section of lb_resp
+# store data section of lb_resp
     - name: Show raw endpoint list
       debug:
         var: lb_resp.json.data
 
-#use debug and msg and jinja2 
-#display the attributes (displayName, port, secure and defaultServiceType
-#if attribute does not exist, return: N/A
+# use debug, msg and jinja2 
+# Show a compact, pipe-separated summary of each 
+# load balancer endpoint (id, name, port, TLS, account)
     - name: Show concise endpoint table 
       debug:
         msg: >-
