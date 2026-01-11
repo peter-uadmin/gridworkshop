@@ -1,3 +1,4 @@
+# this playbook will list all tenants' data
 ---
 - name: List StorageGRID tenants
   hosts: localhost
@@ -8,7 +9,7 @@
     - global_vars.yml
 
   roles:
-    - grid_auth
+    - grid_token
 
   tasks:
     - name: List all tenant accounts
@@ -18,15 +19,9 @@
         validate_certs: false
         gather_subset:
           - grid_accounts_info
-      register: sg_info
-      no_log: true
+      register: sg_grid_info
+      no_log: false
 
-    - name: Create tenant name-to-ID mapping 
-      set_fact:
-        tenant_map: "{{ dict(sg_info.sg_info['grid/accounts'].data | 
-     map(attribute='name') | zip(sg_info.sg_info['grid/accounts'].data | 
-     map(attribute='id'))) }}"
-
-    - name: Show mapping
+    - name: show accounts
       debug:
-        var: tenant_map
+        var: sg_grid_info
