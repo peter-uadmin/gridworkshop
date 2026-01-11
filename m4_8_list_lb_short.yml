@@ -1,9 +1,4 @@
 ---
-- name: List StorageGRID load balancer endpoints
-  hosts: localhost
-  gather_facts: false
-  collections:
-    netapp.storagegrid
 
     - name: Show mapping
       # show the contents of lb_map
@@ -38,3 +33,9 @@
 
   roles:
     - grid_auth
+
+- name: List StorageGRID load balancer endpoints
+  hosts: localhost
+  gather_facts: false
+  collections:
+    netapp.storagegrid
