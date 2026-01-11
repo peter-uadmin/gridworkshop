@@ -1,0 +1,37 @@
+---
+- name: List StorageGRID load balancer endpoints
+  hosts: localhost
+  gather_facts: false
+  collections:
+    netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+
+  roles:
+    - grid_auth
+
+  tasks:
+  - name: Get all load balancer endpoints
+    netapp.storagegrid.na_sg_grid_info:
+      api_url: "{{ grid_endpoint }}"
+      auth_token: "{{ bearer_token }}"
+      validate_certs: false
+      gather_subset:
+        - grid_load_balancer_endpoints_config_info
+    register: sg_grid_info
+    no_log: true
+
+  - name: build lb_map
+    set_fact:
+      lb_map: >-
+        {{
+          lb_map | default({}) |
+          combine({ item.displayName: {'id': item.id, 'port': item.port} })
+        }}
+    loop: "{{ sg_grid_info.sg_info['grid/gateway-configs'].data }}"
+    no_log: true 
+  - name: Show mapping
+    debug:
+      var: lb_map
+  
