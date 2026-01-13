@@ -1,7 +1,3 @@
-####################
-# This play uses a random number if the default
-# value for the bucketname is not modified is unchanged
-###################
 ---
 - name: List StorageGRID tenants
   hosts: localhost
@@ -35,7 +31,6 @@
         gather_subset:
           - grid_accounts_info
       register: data 
-
 
     - name: Show tenant IDs and names
       debug:
