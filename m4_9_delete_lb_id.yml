@@ -7,8 +7,8 @@
     - global_vars.yml
 
   vars_prompt:
-    - name: name
-      prompt: name
+    - name: id 
+      prompt: id 
       private: no
     - name: port
       prompt: port
@@ -22,7 +22,7 @@
       netapp.storagegrid.na_sg_grid_gateway:
         api_url: "{{ grid_endpoint }}"
         auth_token: "{{ bearer_token }}"
-        display_name: "{{ name }}"
+        gateway_id: "{{ id }}"
         port: "{{ port }}"
         state: absent
         validate_certs: false

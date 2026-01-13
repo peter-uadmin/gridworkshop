@@ -7,10 +7,11 @@
 
   vars_files:
     - global_vars.yml
+
   tasks:
     - name: Get bearer token from StorageGRID
       uri:
-        url: "{{ grid_endpoint }}/api/v3/authorize"
+        url: "{{ grid_endpoint }}/api/v4/authorize"
         method: POST
         body_format: json
         body:
@@ -27,7 +28,7 @@
 
     - name: Get list of tenants from StorageGRID
       uri:
-        url: "{{ grid_endpoint }}/api/v3/grid/accounts"
+        url: "{{ grid_endpoint }}/api/v4/grid/accounts"
         method: GET
         headers:
           Authorization: "Bearer {{ bearer_token }}"
@@ -41,4 +42,3 @@
       loop: "{{ tenant_response.json.data }}"
       loop_control:
         label: "{{ item.name }}"
-
