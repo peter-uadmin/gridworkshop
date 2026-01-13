@@ -1,99 +1,26 @@
-####################
-# This play uses a random number if the default
-# value for the bucketname is not modified is unchanged
-###################
+#this playbook has two plays
+#the first play lists the tenants
+#the second play creates the bucket
 ---
+
+#first play
 - name: List StorageGRID tenants
   hosts: localhost
   connection: local
   gather_facts: false
   collections:
     - netapp.storagegrid
+#rest of first play
+#inspect m4_8_list_lb_short.yml
 
-  vars_files:
-    - global_vars.yml
-
-  vars_prompt:
-    - name: grid_user
-      prompt: "enter GRID admin user"
-      default: "root"
-      private: false
-
-    - name: grid_pass
-      prompt: "enter GRID admin password"
-      default: "br@@mspun111"
-      private: true
-
-  roles:
-    - grid_token
-  tasks:
-    - name: List tenants (accounts)
-      netapp.storagegrid.na_sg_grid_info:
-        api_url: "https://192.168.4.230"
-        auth_token: "{{ bearer_token }}"
-        validate_certs: false
-        gather_subset:
-          - grid_accounts_info
-      register: data 
-
-
-    - name: Show tenant IDs and names
-      debug:
-        msg: "id={{ item.id }}, name={{ item.name }}"
-      loop: "{{ data.sg_info['grid/accounts'].data }}"
-      loop_control:
-        label: "{{ item.name }}"
-
+#start of second play
 - name: Create StorageGRID Bucket
   hosts: localhost
   connection: local
   gather_facts: false
   collections:
     - netapp.storagegrid
+#rest of second play
+#inspect m5_1_create_bucket_module.yml
 
-  vars_files:
-    - global_vars.yml
 
-  vars_prompt:
-    - name: tenant_id
-      prompt: "enter tenant id"
-      default: "18815655567777745228"
-      private: false
-
-    - name: user_name
-      prompt: "enter tenant root user name"
-      default: "root"
-      private: false
-
-    - name: user_pass
-      prompt: "enter tenant root user password "
-      default: "br@@mspun111"
-      private: true
-
-    - name: bucket_name
-      prompt: "enter bucket name"
-      default: "default"
-      private: false
-
-  roles:
-    - tenant_token
-
-  tasks:
-    - name: Generate random suffix
-      set_fact:
-        my_random: "{{ 100000 | random }}"
-      run_once: true
-
-    - name: Generate random suffix only if user kept default
-      ansible.builtin.set_fact:
-        bucket_name: "{{ bucket_name }}-{{ my_random }}"
-      when: bucket_name == 'default'
-
-    - name: Create S3 Bucket
-      netapp.storagegrid.na_sg_org_container:
-        api_url: "{{ grid_endpoint }}"
-        auth_token: "{{ bearer_token }}"
-        validate_certs: false
-        state: present
-        name: "{{ bucket_name }}"
-        region: us-east-1
