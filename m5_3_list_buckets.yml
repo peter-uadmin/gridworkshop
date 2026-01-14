@@ -37,6 +37,9 @@
         status_code: [200]
       register: containers
 
-    - name: Show buckets JSON
+    - name: Show bucket names only
       debug:
-        var: containers.json
+        msg: "Bucket: {{ item.name }}"
+      loop: "{{ containers.json.data }}"
+      loop_control:
+        label: "{{ item.name }}"
