@@ -15,7 +15,7 @@
       prompt: "account_id"
       default: "06720005734697258898"
       private: false
-    - name: tenant_user_name
+    - name: tenant_username
       prompt: "tenant admin"
       default: "root"
       private: false
