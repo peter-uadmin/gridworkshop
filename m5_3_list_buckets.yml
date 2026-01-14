@@ -22,7 +22,7 @@
       private: yes
 
   roles:
-    - tenant_token
+    - tenant_auth
 
   tasks:
 
