@@ -16,17 +16,17 @@
 
     - name: user_name
       prompt: "enter tenant user name"
-      default: "default"
+      default: "root"
       private: false
 
     - name: user_pass
       prompt: "enter tenant user password "
-      default: "default"
+      default: "br@@mspun111"
       private: true
 
     - name: bucket_name
       prompt: "enter bucket name"
-      default: "default"
+      default: "myb123"
       private: false
 
   tasks:
@@ -41,11 +41,11 @@
         status_code: [200]
       register: auth
 
-    - name: Delete S3 Bucket
-      netapp.storagegrid.na_sg_org_container:
+    - name: delete a s3 bucket
+      netapp.storagegrid.na_sg_org_bucket:
         api_url: "{{ grid_endpoint }}"
         auth_token: "{{ auth.json.data }}"
         validate_certs: false
         state: absent
         name: "{{ bucket_name }}"
-        region: us-east-1
+
