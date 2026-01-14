@@ -11,7 +11,7 @@
   collections:
     - netapp.storagegrid
 #rest of first play
-#inspect m4_8_list_lb_short.yml
+#inspect m4_4_list_short.yml  
 
 #start of second play
 - name: Create StorageGRID Bucket
