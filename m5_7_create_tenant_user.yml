@@ -6,6 +6,7 @@
 
   vars_files:
     - global_vars.yml
+
   vars_prompt:
     - name: new_user_name
       prompt: "username to create"
@@ -13,7 +14,7 @@
       private: "no"
     - name: tenant_id
       prompt: "account_id"
-      default: "06720005734697258898"
+      default: "18815655567777745228"
       private: false
     - name: tenant_username
       prompt: "tenant admin"
