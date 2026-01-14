@@ -1,0 +1,42 @@
+---
+- name: List StorageGRID tenant buckets via Tenant API
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    grid_endpoint: "https://192.168.4.230"   # tenant/admin endpoint
+    validate_certs: false
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "Tenant ID"
+      default: "18815655567777745228"
+      private: no
+    - name: tenant_username
+      prompt: "Tenant username"
+      private: no
+      default: "root"
+    - name: tenant_password
+      prompt: "Tenant password"
+      default: "br@@mspun111"
+      private: yes
+
+  roles:
+    - tenant_token
+
+  tasks:
+
+    - name: List buckets (containers)
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/org/containers"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ bearer_token }}"
+          Accept: "application/json"
+        validate_certs: "{{ validate_certs }}"
+        status_code: [200]
+      register: containers
+
+    - name: Show buckets JSON
+      debug:
+        var: containers.json
