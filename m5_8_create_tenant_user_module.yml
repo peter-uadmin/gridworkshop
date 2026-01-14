@@ -14,9 +14,9 @@
       private: "no"
     - name: tenant_id
       prompt: "account_id"
-      default: "06720005734697258898"
+      default: "18815655567777745228"
       private: false
-    - name: tenant_user_name
+    - name: tenant_username
       prompt: "tenant admin"
       default: "root"
       private: false
