@@ -22,7 +22,7 @@
 
     - name: tenant_password
       prompt: "enter password "
-      default: "br@@Mspun111"
+      default: "br@@mspun111"
       private: true
 
     - name: bucket_name
