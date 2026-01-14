@@ -12,17 +12,17 @@
   vars_prompt:
     - name: tenant_id
       prompt: "enter tenant id"
-      default: "default"
+      default: "18815655567777745228"
       private: false
 
     - name: tenant_username
       prompt: "enter user name"
-      default: "default"
+      default: "root"
       private: false
 
     - name: tenant_password
       prompt: "enter password "
-      default: "default"
+      default: "br@@Mspun111"
       private: true
 
     - name: bucket_name
@@ -31,10 +31,9 @@
       private: false
   tasks:
     - name: Delete S3 Bucket
-      netapp.storagegrid.na_sg_org_container:
+      netapp.storagegrid.na_sg_org_bucket:
         api_url: "{{ grid_endpoint }}"
         auth_token: "{{ auth.json.data }}"
         validate_certs: false
         state: absent
         name: "{{ bucket_name }}"
-        region: us-east-1
