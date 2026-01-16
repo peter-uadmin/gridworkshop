@@ -1,18 +1,12 @@
-#This role sets the bearer_token for grid_authorization
----
-- name: Get Grid  Authorization Token
-  uri:
-    url: "{{ grid_endpoint }}/api/v3/authorize"
-    method: POST
-    body_format: json
-    body:
-      username: "{{ grid_username }}"
-      password: "{{ grid_password }}"
-    status_code: 200
+- name: Get Grid Authorization token
+  netapp.storagegrid.na_sg_grid_login:
+    hostname: "{{ grid_endpoint }}" 
+    username: "{{ grid_username }}" 
+    password: "{{ grid_password }}"
     validate_certs: false
   register: auth
+  no_log: true
 
-- name: Set bearer token fact
+- name: Expose token as bearer_token
   set_fact:
-    bearer_token: "{{ auth.json.data }}"
-  when: auth.json.data is defined
+    bearer_token: "{{ auth.na_sa_token }}"
