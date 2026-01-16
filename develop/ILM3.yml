@@ -1,0 +1,38 @@
+# ilm_03_policy.yml
+- name: Create and activate ILM policy
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - global_vars.yml
+
+  collections:
+    - netapp.storagegrid
+
+  tasks:
+    - name: Create proposed ILM policy
+      na_sg_grid_ilm_policy:
+        api_url: "{{ sg_grid_endpoint }}"
+        auth_user: "{{ sg_username }}"
+        auth_password: "{{ sg_password }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        name: "Lab-ILM-Policy"
+        state: present
+        description: "Training policy combining replicated and EC rules"
+        default_rule: "Standard-Data-EC"
+        rules_in_order:
+          - "Critical-Data-2x-Replicated"
+          - "Standard-Data-EC"
+        proposed: true
+
+    - name: Activate ILM policy
+      na_sg_grid_ilm_policy:
+        api_url: "{{ sg_grid_endpoint }}"
+        auth_user: "{{ sg_username }}"
+        auth_password: "{{ sg_password }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        name: "Lab-ILM-Policy"
+        state: present
+        activate: true
+

@@ -1,0 +1,52 @@
+# ilm_02_rules.yml
+- name: Create ILM rules
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - global_vars.yml
+
+  collections:
+    - netapp.storagegrid
+
+  tasks:
+    - name: ILM rule - 2 replicated copies for critical data
+      na_sg_grid_ilm_rule:
+        api_url: "{{ sg_grid_endpoint }}"
+        auth_user: "{{ sg_username }}"
+        auth_password: "{{ sg_password }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        name: "Critical-Data-2x-Replicated"
+        state: present
+        placement:
+          - start_days: 0
+            end_days: 0
+            locations:
+              - copies: 2
+                pool: "Primary-Site-Pool"
+        filters:
+          - type: user_metadata
+            key: "data_class"
+            operator: equals
+            value: "critical"
+
+    - name: ILM rule - EC for standard data
+      na_sg_grid_ilm_rule:
+        api_url: "{{ sg_grid_endpoint }}"
+        auth_user: "{{ sg_username }}"
+        auth_password: "{{ sg_password }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        name: "Standard-Data-EC"
+        state: present
+        placement:
+          - start_days: 0
+            end_days: 0
+            locations:
+              - ec_profile: "EC-2plus1"
+        filters:
+          - type: user_metadata
+            key: "data_class"
+            operator: equals
+            value: "standard"
+

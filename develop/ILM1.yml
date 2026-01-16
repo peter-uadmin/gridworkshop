@@ -1,0 +1,37 @@
+# ilm_01_pools_and_ec.yml
+- name: Create ILM pools and erasure-coding profile
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - global_vars.yml    # vaulted
+
+  collections:
+    - netapp.storagegrid
+
+  tasks:
+    - name: Ensure ILM pool for primary site exists
+      na_sg_grid_ilm_pool:
+        api_url: "{{ sg_grid_endpoint }}"
+        auth_user: "{{ sg_username }}"
+        auth_password: "{{ sg_password }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        name: "Primary-Site-Pool"
+        state: present
+        data_center_sites:
+          - name: "DC1"
+        storage_grades:
+          - name: "All Storage Nodes"
+
+    - name: Ensure erasure-coding profile exists
+      na_sg_grid_ilm_ec_profile:
+        api_url: "{{ sg_grid_endpoint }}"
+        auth_user: "{{ sg_username }}"
+        auth_password: "{{ sg_password }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        name: "EC-2plus1"
+        state: present
+        scheme: "2+1"
+        pool: "Primary-Site-Pool"
+
