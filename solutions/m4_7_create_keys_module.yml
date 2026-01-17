@@ -9,11 +9,11 @@
       prompt: "Enter tenant ID"
       default: "18815655567777745228"
       private: false
-    - name: "tenant_admin_user"
+    - name: "tenant_username"
       prompt: "Enter tenant admin user"
       default: "root"
       private: false
-    - name: "tenant_admin_user_password"
+    - name: "tenant_password"
       prompt: "Enter tenant admin user password"
       default: "br@@mspun111"
       private: true
