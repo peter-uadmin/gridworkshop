@@ -1,19 +1,20 @@
 #This role sets the bearer_token for grid_authorization
 ---
-- name: Get Grid  Authorization Token
-  uri:
+- name: Get tenant bearer token
+  ansible.builtin.uri:
     url: "{{ grid_endpoint }}/api/v3/authorize"
     method: POST
     body_format: json
     body:
       accountId: "{{ tenant_id }}"
-      username: "{{ tenant_user_name }}"
+      username: "{{ tenant_username }}"
       password: "{{ tenant_password }}"
+    headers:
+      Content-Type: "application/json"
+    validate_certs: false  # use ca_path when you wire in your PEM
     status_code: 200
-    validate_certs: false
   register: auth
 
-- name: Set bearer token fact
-  set_fact:
+- name: Extract bearer token
+  ansible.builtin.set_fact:
     bearer_token: "{{ auth.json.data }}"
-  when: auth.json.data is defined
