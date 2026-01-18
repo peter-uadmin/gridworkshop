@@ -1,7 +1,7 @@
 - name: Get Grid Authorization token
   netapp.storagegrid.na_sg_grid_login:
-    hostname: "{{ grid_endpoint }}"        # e.g. https://sgadmin.example.com
-    username: "{{ grid_username }}"        # e.g. root
+    hostname: "{{ grid_endpoint }}"
+    username: "{{ grid_username }}"
     password: "{{ grid_password }}"
     validate_certs: false
   register: auth
