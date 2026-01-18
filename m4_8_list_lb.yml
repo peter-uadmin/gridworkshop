@@ -58,3 +58,4 @@
            | secure={{ item.secure | default('N/A') }}
            | account={{ item.accountId | default('N/A') }}
       loop: "{{ lb_resp.json.data }}"
+      no_log: true
