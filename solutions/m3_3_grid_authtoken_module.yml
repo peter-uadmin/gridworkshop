@@ -7,12 +7,11 @@
   collections:
     - netapp.storagegrid
   # define endpoint, user and pass
-
   vars:
     grid_endpoint: "https://192.168.4.230:443"
     grid_username: "root"
     grid_password: "br@@mspun111"
-      #
+      
   # connect to endpoint and use the na_sg_grid_login module
   tasks:
     - name: Get Grid Authorization Token
@@ -37,5 +36,3 @@
     - name: Display Auth using msg
       ansible.builtin.debug:
         msg: "Token: {{ bearer_token }}"
-
-
