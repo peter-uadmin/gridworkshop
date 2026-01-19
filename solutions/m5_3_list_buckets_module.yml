@@ -1,0 +1,43 @@
+---
+- name: List StorageGRID tenant buckets via Tenant API
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    grid_endpoint: "https://192.168.4.230"   # tenant/admin endpoint
+    validate_certs: false
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "Tenant ID"
+      default: "18815655567777745228"
+      private: no
+    - name: tenant_username
+      prompt: "Tenant username"
+      private: no
+      default: "root"
+    - name: tenant_password
+      prompt: "Tenant password"
+      default: "br@@mspun111"
+      private: yes
+
+  roles:
+    - tenant_auth
+
+  tasks:
+    - name: Gather org info (buckets)
+      netapp.storagegrid.na_sg_org_info:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - org/containers   # or whatever the docs specify for buckets
+      register: org_info
+
+    - name: Show bucket names only
+      debug:
+        msg: "Bucket: {{ item.name }}"
+      loop: "{{ org_info.sg_info['org/containers'].data }}"
+      loop_control:
+        label: "{{ item.name }}"
+
