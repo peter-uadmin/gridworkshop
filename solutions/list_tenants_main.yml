@@ -1,0 +1,20 @@
+- name: List all tenant accounts
+  netapp.storagegrid.na_sg_grid_info:
+    api_url: "{{ grid_endpoint }}"
+    auth_token: "{{ bearer_token }}"
+    validate_certs: false
+    gather_subset:
+       - grid_accounts_info
+  register: sg_grid_info
+  no_log: false
+
+- name: Create tenant name-to-ID mapping (silent)
+  set_fact:
+    tenant_map: "{{ dict(sg_grid_info.sg_info['grid/accounts'].data |
+     map(attribute='name') | zip(sg_grid_info.sg_info['grid/accounts'].data |
+     map(attribute='id'))) }}"
+
+- name: Show mapping
+  debug:
+    var: tenant_map
+
