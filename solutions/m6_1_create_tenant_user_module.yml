@@ -24,6 +24,10 @@
       prompt: "tenant_password"
       default: "br@@mspun111"
       private: true
+    - name: tenant_group
+      prompt: "tenant group"
+      default: "---"
+      private: false
 
   roles:
     - tenant_auth
@@ -39,6 +43,8 @@
         unique_name: "user/{{ new_user_name }}"
         full_name: "{{ new_user_name }}"
         state: present
+        member_of:
+          "{{ tenant_group }}"
       register: tenant_user_result
 
     - name: Show result
