@@ -1,0 +1,49 @@
+---
+- name: Change StorageGRID tenant root password
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: Tenant id
+      private: false
+    - name: tenant_name
+      prompt: Tenant name
+      private: no
+    - name: tenant_pass
+      prompt: New Tenant Root Password 
+      private: true
+
+  roles:
+    - grid_auth
+    - tenant_user_pass
+
+  tasks:
+    - name: Get list of tenants from StorageGRID
+      uri:
+        url: "{{ grid_endpoint }}/api/v3/grid/accounts"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ bearer_token }}"
+          Accept: "application/json"
+        validate_certs: false
+      register: tenant_response
+
+    - name: Get tenant name by id
+      set_fact:
+        tenant_name: >-
+          {{ tenant_response.json.data
+             | selectattr('id', 'equalto', tenant_id)
+             | map(attribute='name')
+             | first }}
+
+    - name: Show tenant name
+      debug:
+        msg: "tenant id={{ tenant_id }}, name={{ tenant_name }}"
