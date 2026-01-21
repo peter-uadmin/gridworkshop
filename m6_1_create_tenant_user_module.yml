@@ -1,0 +1,46 @@
+---
+- name: Create StorageGRID tenant user
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - global_vars.yml
+
+  vars_prompt:
+    - name: new_user_name
+      prompt: "username to create"
+      default: "user1"
+      private: "no"
+    - name: tenant_id
+      prompt: "account_id"
+      default: "18815655567777745228"
+      private: false
+    - name: tenant_username
+      prompt: "tenant admin"
+      default: "root"
+      private: false
+    - name: tenant_password
+      prompt: "tenant_password"
+      default: "br@@mspun111"
+      private: true
+
+  roles:
+    - tenant_auth
+
+  tasks:
+    - name: Create/update tenant local user (idempotent)
+      netapp.storagegrid.na_sg_org_user:
+        api_url: "{{ grid_endpoint }}"
+        validate_certs: false
+        auth_token: "{{ bearer_token }}"
+
+        # User definition
+        unique_name: "user/{{ new_user_name }}"
+        full_name: "{{ new_user_name }}"
+        state: present
+      register: tenant_user_result
+
+    - name: Show result
+      ansible.builtin.debug:
+        var: tenant_user_result
