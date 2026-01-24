@@ -1,0 +1,59 @@
+---
+- name: Create S3 access keys for a tenant user
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  collections:
+    - netapp.storagegrid
+
+  vars_prompt:
+    - name: "tenant_id"
+      prompt: "Enter tenant ID"
+      default: "18815655567777745228"
+      private: false
+    - name: "tenant_username"
+      prompt: "Enter tenant_user (StorageGRID username, e.g. user/ansibleuser1)"
+      default: "root"
+      private: false
+    - name: "tenant_password"
+      prompt: "Enter tenant user password"
+      default: "br@@mspun111"
+      private: true
+
+  vars_files:
+    - global_vars.yml
+
+  roles:
+    - tenant_auth   
+
+  tasks:
+    - name: Set auth token fact for StorageGRID modules
+      ansible.builtin.set_fact:
+        sg_auth_token: "{{ bearer_token }}"
+
+    - name: Ask for target user name
+      ansible.builtin.pause:
+        prompt: "Enter the unique StorageGRID tenant username (for example: user/user1)"
+      register: target_user_name_input
+
+    - name: Set target user name fact
+      ansible.builtin.set_fact:
+        target_user_name: "{{ target_user_name_input.user_input }}"
+
+    - name: Create S3 access keys for tenant user via module
+      netapp.storagegrid.na_sg_org_user_s3_key:
+        state: present
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        unique_user_name: "{{ target_user_name }}"
+      register: s3_keys
+
+    - name: Display created S3 keys
+      ansible.builtin.debug:
+        msg:
+          access_key: "{{ s3_keys.resp.accessKey }}"
+          secret_access_key: "{{ s3_keys.resp.secretAccessKey }}"
+          raw_response: "{{ s3_keys.resp }}"
+
