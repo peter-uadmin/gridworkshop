@@ -1,0 +1,6 @@
+aws s3 ls s3:// --no-verify-ssl --endpoint-url http://192.168.4.230:10446 --profile finance
+aws s3 ls s3://bucket2 --no-verify-ssl --endpoint-url http://192.168.4.230:10446 --profile finance
+aws s3 cp file1 s3://bucket2 --no-verify-ssl --endpoint-url http://192.168.4.230:10446 --profile finance
+aws s3 cp file1 s3://bucket2 --no-verify-ssl --endpoint-url http://192.168.4.230:10446 --profile finance
+aws s3 rm s3://bucket2/file1 --no-verify-ssl --endpoint-url http://192.168.4.230:10446 --profile finance
+aws s3 mb s3://bucket2 --no-verify-ssl --endpoint-url http://192.168.4.230:10446 --profile finance --region us-east-1
