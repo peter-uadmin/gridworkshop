@@ -1,0 +1,35 @@
+---
+- name: Manage ILM rule
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+
+  roles:
+    - grid_auth
+
+  tasks:
+    - name: Create ILM rule "demo-2-copies"
+      na_sg_grid_ilm_rule:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        state: present
+        name: "demo-2-copies"
+        reference_time: "ingestTime"
+        ingest_behavior: "balanced"
+        filters: []          # apply to all objects
+        placements:
+          - retention:
+              after: 0       # from day 0
+            replicated:
+              - copies: 2
+                poolId: "p13741440324446981738"
+
+                  #pool id cannot be retrieved using api or modules
+                  #but you can use curl to list an existing rule that is
+                  #connected to a pool...use that poolid.
+                  #see ~/gridworkshop/curl/get_pool_id.sh

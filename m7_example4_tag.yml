@@ -1,0 +1,24 @@
+---
+- name: Manage ILM policy tag
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+  roles:
+    - grid_auth
+
+  tasks:
+    - name: Create ILM policy tag "finance-tag"
+      na_sg_grid_ilm_policy_tag:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        state: present
+        name: "finance-tag"
+        description: "Finance buckets ILM"
+        policy_id: "429d025d-1694-4cde-b845-8aec25cda2d2"   # ILM policy ID
+
+        #to get the policy id... ~/gridworkshop/curl/get_policy_id.sh

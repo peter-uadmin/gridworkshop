@@ -1,0 +1,32 @@
+---
+- name: Manage ILM policy
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+
+  roles:
+    - grid_auth
+  tasks:
+    - name: Create ILM policy "1 Copy Per Site"
+      na_sg_grid_ilm_policy:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        state: present
+        name: "1 Copy Per Site"
+        reason: "Demo policy created via Ansible"
+        default_rule: "r6389499062596081538"
+        rules:
+          - "r6389499062596081538"
+
+        #the rule id can be retrieved using curl.
+        #
+        #curl -k -s   -H "Authorization: Bearer 44aea1b6-c2ad-4462-8bba-d76483a9404f " \  
+        #https://192.168.4.230/api/v4/grid/ilm-rules   | jq '.data[] | \
+        #select(.displayName=="Make 2 Copies") | .id'
+
+
