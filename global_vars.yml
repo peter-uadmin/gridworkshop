@@ -6,7 +6,7 @@ grid_endpoint: "https://192.168.4.230:443"
 validate_certs: "false"
 
 #for all tenants
-tenant_endpoint: "https://192.168.0.80:10446"
+tenant_endpoint: "https://192.168.4.230:10446"
 
 #for storing files
 playbookdir: "/root/gridworkshop"
