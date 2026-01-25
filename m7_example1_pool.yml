@@ -1,0 +1,25 @@
+---
+- name: Manage ILM pool
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+
+  roles:
+    - grid_auth
+
+  tasks:
+    - name: Create ILM pool "DC2"
+      na_sg_grid_ilm_pool:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        state: present
+        name: "DC2"
+        disks:
+          - group: 10       # example storage-grade / site group
+        archives: []
+
