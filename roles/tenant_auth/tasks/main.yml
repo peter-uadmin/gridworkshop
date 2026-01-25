@@ -1,20 +1,12 @@
-#This role sets the bearer_token for grid_authorization
----
-- name: Get tenant bearer token
-  ansible.builtin.uri:
-    url: "{{ grid_endpoint }}/api/v3/authorize"
-    method: POST
-    body_format: json
-    body:
-      accountId: "{{ tenant_id }}"
-      username: "{{ tenant_username }}"
-      password: "{{ tenant_password }}"
-    headers:
-      Content-Type: "application/json"
-    validate_certs: false  # use ca_path when you wire in your PEM
-    status_code: 200
+- name: generate auth token for org module on StorageGRID
+  netapp.storagegrid.na_sg_grid_login:
+    hostname: "{{ grid_endpoint }}"
+    username: "{{ tenant_root_user }}"
+    password: "{{ tenant_root_pass }}"
+    tenant_id: "{{ tenant_id }}"
+    validate_certs: false
   register: auth
 
-- name: Extract bearer token
-  ansible.builtin.set_fact:
-    bearer_token: "{{ auth.json.data }}"
+- name: Expose token as bearer_token
+  set_fact:
+    bearer_token: "{{ auth.na_sa_token }}"

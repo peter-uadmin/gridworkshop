@@ -1,0 +1,52 @@
+---
+- name: List StorageGRID tenant users via collection
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+
+  vars_prompt:
+    - name: tenant_id
+      prompt: "Enter tenant ID"
+      default: "18815655567777745228"
+      private: false
+    - name: tenant_root_user
+      prompt: "Enter tenant root username"
+      private: false
+      default: "root"
+    - name: tenant_root_pass
+      prompt: "Enter tenant root password"
+      default: "br@@mspun111"
+      private: true
+
+  roles:
+    - tenant_auth
+
+  tasks:
+    - name: Gather tenant org info (includes users)
+      na_sg_org_info:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        gather_subset: "org/users"
+        validate_certs: false
+      register: org_info
+
+    - name: Show username and id for each user
+      debug:
+        msg: "users: {{ org_info }}"
+
+    - name: Create tenant name-to-ID mapping (silent)
+      set_fact:
+        user_map: "{{ dict(org_info.sg_info['org/users'].data |
+     map(attribute='fullName') | zip(org_info.sg_info['org/users'].data |
+     map(attribute='memberOf'))) }}"
+
+    - name: Show mapping
+      debug:
+        var: user_map
+
