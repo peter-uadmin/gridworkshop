@@ -6,14 +6,16 @@
     - netapp.storagegrid
 
   vars_files:
-    - vars.yml
+    - global_vars.yml
+
+  roles:
+    - grid_auth
 
   tasks:
     - name: Create ILM rule "demo-2-copies"
       na_sg_grid_ilm_rule:
         api_url: "{{ grid_endpoint }}"
-        username: "{{ grid_username }}"
-        password: "{{ grid_password }}"
+        auth_token: "{{ bearer_token }}"
         validate_certs: false
         state: present
         name: "demo-2-copies"
@@ -25,5 +27,9 @@
               after: 0       # from day 0
             replicated:
               - copies: 2
-                poolId: "p10771105546308032398"
+                poolId: "p13741440324446981738"
 
+                  #pool id cannot be retrieved using api or modules
+                  #but you can use curl to list an existing rule that is
+                  #connected to a pool...use that poolid.
+                  #see ~/gridworkshop/curl/get_pool_id.sh
