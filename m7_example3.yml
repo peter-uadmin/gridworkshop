@@ -1,0 +1,24 @@
+---
+- name: Manage ILM policy
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+
+  tasks:
+    - name: Create ILM policy "1 Copy Per Site"
+      na_sg_grid_ilm_policy:
+        api_url: "{{ grid_endpoint }}"
+        username: "{{ grid_username }}"
+        password: "{{ grid_password }}"
+        validate_certs: false
+        state: present
+        name: "1 Copy Per Site"
+        reason: "Demo policy created via Ansible"
+        default_rule: "r601033236249396421"
+        rules:
+          - "r601033236249396421"
+

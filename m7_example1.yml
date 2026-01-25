@@ -1,0 +1,23 @@
+---
+- name: Manage ILM pool
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+
+  tasks:
+    - name: Create ILM pool "Data Center 1"
+      na_sg_grid_ilm_pool:
+        api_url: "{{ grid_endpoint }}"
+        username: "{{ grid_username }}"
+        password: "{{ grid_password }}"
+        validate_certs: false
+        state: present
+        name: "Data Center 1"
+        disks:
+          - group: 10       # example storage-grade / site group
+        archives: []
+
