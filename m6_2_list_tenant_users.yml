@@ -49,9 +49,6 @@
         validate_certs: false
         status_code: [200]
       register: users
-        #    - name: Show users JSON
-        #debug:
-        #var: users.json
 
     - name: Show username and id for each user
       debug:
