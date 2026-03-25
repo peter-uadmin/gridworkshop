@@ -8,6 +8,7 @@
 
   vars:
     myvar: peter
+    grid_password: Netapp1!"
 
   vars_prompt:
     - name: grid_endpoint
