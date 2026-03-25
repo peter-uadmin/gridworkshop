@@ -22,7 +22,7 @@
 
     - name: tenant_password
       prompt: "enter password "
-      default: "br@@mspun111"
+      default: "Netapp1!"
       private: true
 
     - name: bucket_name

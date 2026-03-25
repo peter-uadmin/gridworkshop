@@ -6,9 +6,9 @@
 
 # set variables needed.
   vars:
-    sg_api_url: "https://192.168.4.230:443"   # e.g. https://sg-admin01.example.com
+    sg_api_url: "https://192.168.0.80:443"   # e.g. https://sg-admin01.example.com
     sg_username: "root"
-    sg_password: "br@@mspun111"
+    sg_password: "Netapp1!"
     validate_certs: false
 
   tasks:

@@ -1,12 +1,12 @@
 # storagegrid_credentials.yml
 #used for all root tasks
 grid_username: "root"
-grid_password: "br@@mspun111"
-grid_endpoint: "https://192.168.4.230:443"
+grid_password: "Netapp1!"
+grid_endpoint: "https://192.168.0.80:443"
 validate_certs: "false"
 
 #for all tenants
-tenant_endpoint: "https://192.168.4.230:10446"
+tenant_endpoint: "https://192.168.0.80:10446"
 
 #for storing files
 playbookdir: "/root/gridworkshop"

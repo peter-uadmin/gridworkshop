@@ -11,9 +11,9 @@
     - netapp.storagegrid
   # define endpoint, user and pass
   vars:
-    grid_endpoint: "https://192.168.4.230:443"
+    grid_endpoint: "https://192.168.0.80:443"
     grid_username: "root"
-    grid_password: "br@@mspun111"
+    grid_password: "Netapp1!"
   # connect to endpoint ans use /api/v3/authorize
   tasks:
     - name: Get Grid Authorization Token

@@ -3,9 +3,9 @@ clear
 set -euo pipefail
 
 # 1) get grid info
-ADDR=192.168.4.230
+ADDR=192.168.0.80
 GRID_USER="root"              # grid admin
-GRID_PASS="br@@mspun111"
+GRID_PASS="Netapp1!"
 echo
 
 # 2) Get grid admin token
@@ -21,7 +21,7 @@ token=$(curl -k -s -X POST "https://${ADDR}/api/v3/authorize" \
 # 3) Get tenants
 echo "listing tenants: "
 echo "---------------  "
-curl -s -X GET "https://192.168.4.230:443/api/v3/grid/accounts" -H "accept: application/json"  -H "Authorization: Bearer $token" -k  |jq -r '.data[] | "\(.name) \(.id)"'
+curl -s -X GET "https://192.168.0.80:443/api/v3/grid/accounts" -H "accept: application/json"  -H "Authorization: Bearer $token" -k  |jq -r '.data[] | "\(.name) \(.id)"'
 
 # 4) Paste ID
 echo -n "Tenant ID to delete: "

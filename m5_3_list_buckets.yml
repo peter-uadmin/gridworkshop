@@ -4,7 +4,7 @@
   gather_facts: no
 
   vars:
-    grid_endpoint: "https://192.168.4.230"   # tenant/admin endpoint
+    grid_endpoint: "https://192.168.0.80"   # tenant/admin endpoint
     validate_certs: false
 
   vars_prompt:
@@ -18,7 +18,7 @@
       default: "root"
     - name: tenant_password
       prompt: "Tenant password"
-      default: "br@@mspun111"
+      default: "Netapp1!"
       private: yes
 
   roles:

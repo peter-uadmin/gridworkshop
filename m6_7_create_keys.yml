@@ -15,7 +15,7 @@
       private: false
     - name: "tenant_password"
       prompt: "Enter tenant user password"
-      default: "br@@mspun111"
+      default: "Netapp1!"
       private: true
 
   vars_files:

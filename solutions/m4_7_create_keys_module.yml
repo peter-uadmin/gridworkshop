@@ -15,11 +15,11 @@
       private: false
     - name: "tenant_password"
       prompt: "Enter tenant admin user password"
-      default: "br@@mspun111"
+      default: "Netapp1!"
       private: true
 
   vars:
-    grid_endpoint: "https://192.168.4.230:443"
+    grid_endpoint: "https://192.168.0.80:443"
     tenant_root_user: "root"
 
   roles:

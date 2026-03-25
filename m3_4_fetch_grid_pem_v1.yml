@@ -1,5 +1,5 @@
 ---
-- name: Fetch TLS cert from 192.168.4.230
+- name: Fetch TLS cert from 192.168.0.80
   hosts: localhost
   vars_files: global_vars.yml
   tasks:
@@ -12,8 +12,8 @@
     - name: Save StorageGRID server certificate to grid_admin.pem
       shell: |
         openssl s_client \
-          -connect 192.168.4.230:443 \
-          -servername 192.168.4.230 \
+          -connect 192.168.0.80:443 \
+          -servername 192.168.0.80 \
           -showcerts \
           </dev/null 2>/dev/null \
         | sed -n '0,/-----BEGIN CERTIFICATE-----/p; /-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p' \

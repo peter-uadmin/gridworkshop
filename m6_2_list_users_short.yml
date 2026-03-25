@@ -21,7 +21,7 @@
       default: "root"
     - name: tenant_root_pass
       prompt: "Enter tenant root password"
-      default: "br@@mspun111"
+      default: "Netapp1!"
       private: true
 
   roles:

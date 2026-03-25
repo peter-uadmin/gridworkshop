@@ -22,7 +22,7 @@
       private: false
     - name: tenant_password
       prompt: "tenant_password"
-      default: "br@@mspun111"
+      default: "Netapp1!"
       private: true
     - name: tenant_group
       prompt: "tenant group"

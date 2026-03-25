@@ -7,7 +7,7 @@
     - netapp.storagegrid
 
   vars:
-    grid_endpoint: "https://192.168.4.230:443"
+    grid_endpoint: "https://192.168.0.80:443"
 
   vars_prompt:
     - name: tenant_id
@@ -22,7 +22,7 @@
 
     - name: tenant_admin_user_password
       prompt: "Enter tenant admin password"
-      default: br@@mspun111
+      default: Netapp1!
       private: true
 
     - name: user_simple_name

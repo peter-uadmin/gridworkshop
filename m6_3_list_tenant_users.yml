@@ -4,7 +4,7 @@
   connection: local
   gather_facts: false
   vars:
-    grid_endpoint: "https://192.168.4.230:443"
+    grid_endpoint: "https://192.168.0.80:443"
   vars_prompt:
     - name: tenant_id
       prompt: "Enter tenant ID"

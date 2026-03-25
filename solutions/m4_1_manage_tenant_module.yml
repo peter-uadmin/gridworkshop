@@ -8,6 +8,9 @@
     - myvars.yml
 
   vars_prompt:
+    - name: tenant_name
+      prompt: name
+      private: no 
     - name: state
       prompt: "present / absent"
       private: no
@@ -16,7 +19,7 @@
       private: true
 
   roles:
-    - grid_token
+    - grid_auth
 
   tasks:
     - name: Set grid token

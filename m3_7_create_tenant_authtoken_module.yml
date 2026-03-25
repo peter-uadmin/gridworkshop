@@ -13,9 +13,9 @@
 
   # define endpoint, user and pass
   vars:
-    grid_endpoint: "https://192.168.4.230:443"
+    grid_endpoint: "https://192.168.0.80:443"
     tenant_username: "root"
-    tenant_password: "br@@mspun111"
+    tenant_password: "Netapp1!"
 
   vars_prompt:
     - name: tenant_id

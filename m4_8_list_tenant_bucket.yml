@@ -10,7 +10,7 @@
   gather_facts: false
 
   vars:
-    s3_endpoint: "http://192.168.4.230:10446"
+    s3_endpoint: "http://192.168.0.80:10446"
 
   vars_prompt:
     - name: profile
@@ -23,7 +23,7 @@
         cmd: >
           aws s3 ls
           --profile "{{ profile }}"
-          --endpoint-url http://192.168.4.230:10446
+          --endpoint-url http://192.168.0.80:10446
       register: aws_s3_output
 
     - name: Display buckets

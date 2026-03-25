@@ -40,5 +40,5 @@
   
   vars:
     sg_username: "root"
-    sg_password: "br@@mspun111"
+    sg_password: "Netapp1!"
     validate_certs: false

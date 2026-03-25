@@ -26,7 +26,7 @@
 
     - name: user_pass
       prompt: "enter tenant root user password "
-      default: "br@@mspun111"
+      default: "Netapp1!"
       private: true
 
     - name: bucket_name
@@ -48,7 +48,7 @@
 
     - name: Get tenant auth token via sg_login
       netapp.storagegrid.na_sg_grid_login:
-        hostname: "https://192.168.4.230"
+        hostname: "https://192.168.0.80"
         username: "{{ user_name }}"
         password: "{{ user_pass }}"
         tenant_id: "{{ tenant_id }}"

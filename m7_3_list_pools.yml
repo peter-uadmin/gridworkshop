@@ -9,7 +9,7 @@
   vars_prompt:
     - name: grid_addr
       prompt: "Grid admin address"
-      default: "192.168.4.230"
+      default: "192.168.0.80"
       private: false
     - name: grid_user
       prompt: "Grid admin username"
@@ -17,7 +17,7 @@
       private: false
     - name: grid_pass
       prompt: "Grid admin password"
-      default: "br@@mspun111"
+      default: "Netapp1!"
       private: true
     - name: pool_name
       prompt: "Name of pool"

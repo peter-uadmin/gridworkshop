@@ -12,12 +12,12 @@ export t_id
 #get token
 echo "$t_id"
 curl -k -s \
-  -X POST "https://192.168.4.230/api/v3/authorize" \
+  -X POST "https://192.168.0.80/api/v3/authorize" \
   -H "Content-Type: application/json" \
   -d @- <<EOF
     {
     "username": "root",
-    "password": "br@@mspun111",
+    "password": "Netapp1!",
     "accountId": "$t_id"
      }
 EOF

@@ -8,7 +8,17 @@
     - myvars.yml
 
   roles:
-    - grid_token
+    - grid_auth
+ 
+  vars_prompt:
+    - name: tenant_name
+      prompt: tenant name
+      default: ----
+      private: no
+    - name: tenant_password
+      prompt: password
+      default: ----
+      private: yes
 
   tasks:
     - name: create a tenant account
