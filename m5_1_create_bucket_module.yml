@@ -16,15 +16,15 @@
   vars_prompt:
     - name: tenant_id
       prompt: "enter tenant id"
-      default: "18815655567777745228"
+      default: "existing tenant id"
       private: false
 
-    - name: user_name
+    - name: tenant_username
       prompt: "enter tenant root user name"
       default: "root"
       private: false
 
-    - name: user_pass
+    - name: tenant_password
       prompt: "enter tenant root user password "
       default: "Netapp1!"
       private: true
