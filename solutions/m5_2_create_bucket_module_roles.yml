@@ -55,12 +55,12 @@
       default: "18815655567777745228"
       private: false
 
-    - name: tenant_user_name
+    - name: tenant_username
       prompt: "enter tenant root user name"
       default: "root"
       private: false
 
-    - name: tenant_user_pass
+    - name: tenant_password
       prompt: "enter tenant root user password "
       default: "Netapp1!"
       private: true
