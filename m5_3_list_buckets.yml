@@ -1,6 +1,7 @@
 ---
 - name: List StorageGRID tenant buckets via Tenant API
   hosts: localhost
+  connection: local
   gather_facts: no
 
   vars:
@@ -12,11 +13,11 @@
       prompt: "Tenant ID"
       default: "18815655567777745228"
       private: no
-    - name: tenant_username
+    - name: tenant_root_user
       prompt: "Tenant username"
       private: no
       default: "root"
-    - name: tenant_password
+    - name: tenant_root_pass
       prompt: "Tenant password"
       default: "Netapp1!"
       private: yes
