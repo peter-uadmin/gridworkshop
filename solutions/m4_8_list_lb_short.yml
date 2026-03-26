@@ -2,6 +2,7 @@
 - name: List StorageGRID load balancer endpoints
   hosts: localhost
   gather_facts: false
+  connection: local
   collections:
     netapp.storagegrid
 
