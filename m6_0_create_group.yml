@@ -11,7 +11,7 @@
 
   vars_prompt:
     - name: tenant_id
-      default: 18815655567777745228 
+      default: ------- 
       prompt: tenant_id
       private: false
     - name: sg_group_display_name
