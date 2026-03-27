@@ -6,32 +6,18 @@
   collections:
     - netapp.storagegrid
 
-  vars_prompt:
-    - name: grid_addr
-      prompt: "Grid admin address"
-      default: "192.168.0.80"
-      private: false
-    - name: grid_user
-      prompt: "Grid admin username"
-      default: "root"
-      private: false
-    - name: grid_pass
-      prompt: "Grid admin password"
-      default: "Netapp1!"
-      private: true
-    - name: pool_name
-      prompt: "Name of pool"
-      private: false
+  vars_files:
+    - global_vars.yml
 
   tasks:
     - name: Get grid auth token
       ansible.builtin.uri:
-        url: "https://{{ grid_addr }}/api/v3/authorize"
+        url: "{{ grid_endpoint }}/api/v3/authorize"
         method: POST
         body_format: json
         body:
-          username: "{{ grid_user }}"
-          password: "{{ grid_pass }}"
+          username: "{{ grid_username }}"
+          password: "{{ grid_password }}"
           cookie: false
           csrfToken: false
         headers:
@@ -53,11 +39,25 @@
 
     - name: Get grid info (including ILM pools)
       na_sg_grid_info:
-        api_url: "https://{{ grid_addr }}"
+        api_url: "{{ grid_endpoint }}"
         auth_token: "{{ grid_token }}"
         validate_certs: false
       register: grid_info
 
-    - name: Show ILM storage pools
+    - name: Show ILM storage pools (concise)
       ansible.builtin.debug:
-        var: grid_info.storage_pools
+        msg: >-
+          {{ item.id | default('N/A') }}
+          | {{ item.name | default('N/A') }}
+          | {{ item.description | default('N/A') }}
+    - name: Show ILM storage pools (concise)
+      ansible.builtin.debug:
+        msg: >-
+          {{ item.id | default('N/A') }}
+          | {{ item.displayName | default('N/A') }}
+          | {{ item.name | default('N/A') }}
+      loop: "{{ grid_info.sg_info['grid/ilm-pools'].data | default([]) }}"
+
+#    - name: Show ILM storage pools
+#      ansible.builtin.debug:
+#        var: grid_info
