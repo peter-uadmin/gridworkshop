@@ -1,6 +1,7 @@
 ---
 - name: Create StorageGRID tenant group with full S3 access
   hosts: localhost
+  connection: local
   gather_facts: false
 
   collections:
