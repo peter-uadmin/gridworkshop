@@ -1,0 +1,86 @@
+---
+- name: Create default 2-copy ILM rule, policy and tag
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  collections:
+    - netapp.storagegrid
+
+  vars_files:
+    - global_vars.yml
+
+  roles:
+    - grid_auth
+
+  vars:
+    default_rule_name: "Default 2 copies"
+    default_pool_id: "p13741440324446981738"
+    ilm_policy_name: "ANSIBLE_POLICY_2COPIES"
+    ilm_policy_reason: "Set via Ansible workshop"
+    ilm_tag_name: "SILVER"
+    ilm_tag_description: "Silver tier: 2 copies in main pool"
+
+  tasks:
+
+    - name: Create default ILM rule (2 replicated copies)
+      netapp.storagegrid.na_sg_grid_ilm_rule:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        state: present
+        name: "{{ default_rule_name }}"
+        reference_time: "ingestTime"
+        ingest_behavior: "balanced"
+        filters: []
+        placements:
+          - retention:
+              after: 0
+              duration: null
+            replicated:
+              - copies: 2
+                poolId: "{{ default_pool_id }}"
+
+    - name: Get ILM rules info
+      netapp.storagegrid.na_sg_grid_info:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        gather_subset:
+          - grid_ilm_rules_info
+      register: sg_info
+
+    - name: Extract default rule ID by name
+      set_fact:
+        ilm_rule_default_id: >-
+          {{ (sg_info.sg_info['grid/ilm-rules'].data
+              | selectattr('displayName','equalto', default_rule_name)
+              | list).0.id }}
+
+    - debug:
+        msg: "Default ILM rule ID is {{ ilm_rule_default_id }}"
+
+    - name: Create ILM policy using default rule
+      netapp.storagegrid.na_sg_grid_ilm_policy:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        state: present
+        name: "{{ ilm_policy_name }}"
+        default_rule: "{{ ilm_rule_default_id }}"
+        rules:
+          - "{{ ilm_rule_default_id }}"
+        reason: "{{ ilm_policy_reason }}"
+
+    - name: Create ILM policy tag for tenants
+      netapp.storagegrid.na_sg_grid_ilm_policy_tag:
+        api_url: "{{ grid_endpoint }}"
+        auth_token: "{{ bearer_token }}"
+        validate_certs: false
+        state: present
+        name: "{{ ilm_tag_name }}"
+        description: "{{ ilm_tag_description }}"
+      register: ilm_tag
+
+    - debug:
+        msg: "Created ILM policy tag {{ ilm_tag.resp.name }} (ID {{ ilm_tag.resp.id | default('n/a') }})"
