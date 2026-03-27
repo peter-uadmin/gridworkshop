@@ -32,7 +32,7 @@
       private: true
 
   roles:
-    - tenant_auth
+    - tenant_token
 
   tasks:
     - name: Ensure full-S3-access group exists
