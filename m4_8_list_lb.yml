@@ -6,7 +6,7 @@
 
 # set variables needed.
   vars:
-    sg_api_url: "https://192.168.0.80:443"   # e.g. https://sg-admin01.example.com
+    sg_api_url: "https://192.168.4.230:443"   # e.g. https://sg-admin01.example.com
     sg_username: "root"
     sg_password: "Netapp1!"
     validate_certs: false
@@ -57,5 +57,6 @@
            | port={{ item.port | default('N/A') }}
            | secure={{ item.secure | default('N/A') }}
            | account={{ item.accountId | default('N/A') }}
-      loop: "{{ lb_resp.json.data }}"
-      no_log: true
+      loop: "{{ lb_resp.json.data | default([]) | reject('equalto', None) | list }}"
+      loop_control:
+        label: "{{ item.displayName | default(item.id | default('endpoint')) }}"
