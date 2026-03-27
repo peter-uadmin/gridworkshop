@@ -22,7 +22,7 @@
     - global_vars.yml
 
   roles:
-    - tenant_auth
+    - tenant_token
 
   tasks:
     - name: List tenant users
