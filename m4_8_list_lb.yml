@@ -4,17 +4,15 @@
   connection: local
   gather_facts: false
 
-# set variables needed.
   vars:
-    sg_api_url: "https://192.168.4.230:443"   # e.g. https://sg-admin01.example.com
+    sg_api_url: "https://192.168.4.230:443"
     sg_username: "root"
     sg_password: "Netapp1!"
     validate_certs: false
 
   tasks:
-# authorize
     - name: Get auth token
-      uri:
+      ansible.builtin.uri:
         url: "{{ sg_api_url }}/api/v4/authorize"
         method: POST
         validate_certs: "{{ validate_certs }}"
@@ -24,39 +22,39 @@
           password: "{{ sg_password }}"
         return_content: true
       register: auth_resp
-# fill variable sg_auth_token  
+      no_log: true   # hide credentials and token from output
+
+    - name: Fail if authentication did not return a token
+      ansible.builtin.fail:
+        msg: "Authentication failed, no token returned from StorageGRID."
+      when: auth_resp.json.data is not defined
+
     - name: Set auth token fact
-      set_fact:
+      ansible.builtin.set_fact:
         sg_auth_token: "{{ auth_resp.json.data }}"
 
-# use raw api and bearer token
     - name: Get all load balancer endpoints
-      uri:
+      ansible.builtin.uri:
         url: "{{ sg_api_url }}/api/v4/private/gateway-configs"
         method: GET
         validate_certs: "{{ validate_certs }}"
         headers:
           Authorization: "Bearer {{ sg_auth_token }}"
         return_content: true
-# store in lb_resp
       register: lb_resp
 
-# store data section of lb_resp
-    - name: Show raw endpoint list
-      debug:
+    - name: Show raw endpoint list (StorageGRID response)
+      ansible.builtin.debug:
         var: lb_resp.json.data
 
-# use debug, msg and jinja2 
-# Show a compact, pipe-separated summary of each 
-# load balancer endpoint (id, name, port, TLS, account)
-    - name: Show concise endpoint table 
-      debug:
+    - name: Show concise endpoint table
+      ansible.builtin.debug:
         msg: >-
-           {{ item.id | default('N/A') }}
-           | {{ item.displayName | default('N/A') }}
-           | port={{ item.port | default('N/A') }}
-           | secure={{ item.secure | default('N/A') }}
-           | account={{ item.accountId | default('N/A') }}
+          {{ item.id | default('N/A') }}
+          | {{ item.displayName | default('N/A') }}
+          | port={{ item.port | default('N/A') }}
+          | secure={{ item.secure | default('N/A') }}
+          | account={{ item.accountId | default('N/A') }}
       loop: "{{ lb_resp.json.data | default([]) | reject('equalto', None) | list }}"
       loop_control:
         label: "{{ item.displayName | default(item.id | default('endpoint')) }}"
