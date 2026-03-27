@@ -5,7 +5,7 @@
   gather_facts: false
 
   vars:
-    sg_api_url: "https://192.168.4.230:443"
+    sg_api_url: "https://192.168.0.80:443"
     sg_username: "root"
     sg_password: "Netapp1!"
     validate_certs: false
