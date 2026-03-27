@@ -16,11 +16,11 @@
       prompt: "account_id"
       default: "18815655567777745228"
       private: false
-    - name: tenant_username
+    - name: tenant_root_user
       prompt: "tenant admin"
       default: "root"
       private: false
-    - name: tenant_password
+    - name: tenant_root_pass
       prompt: "tenant_password"
       default: "Netapp1!"
       private: true
