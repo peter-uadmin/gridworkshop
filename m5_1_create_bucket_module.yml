@@ -48,7 +48,7 @@
 
     - name: Get tenant auth token via sg_login
       netapp.storagegrid.na_sg_grid_login:
-        hostname: "https://192.168.4.230"
+        hostname: "https://192.168.0.80"
         username: "{{ tenant_username }}"
         password: "{{ tenant_password }}"
         tenant_id: "{{ tenant_id }}"
