@@ -1,6 +1,7 @@
 ---
 - name: Delete Gateway Endpoint by name/port
   hosts: localhost
+  connection: local
   gather_facts: false
 
   vars_files:
