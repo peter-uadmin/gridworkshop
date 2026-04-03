@@ -1,4 +1,20 @@
-curl -k -s \
-  -H "Authorization: Bearer c5b1e120-4f86-4c6c-bd57-bbfe2549dc1e" \
-  https://192.168.0.80/api/v4/grid/ilm-policies #
+#!/bin/bash
 
+echo "Get bearer token:"
+token=$(curl -s -k -X POST "https://192.168.4.230/api/v3/authorize" \
+  -H "accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"root","password":"Netapp1!"}' | jq -r '.data')
+
+echo "List ILM policies:"
+curl -s -k \
+  -H "Authorization: Bearer $token" \
+  "https://192.168.4.230/api/v4/grid/ilm-policies" | jq .
+
+
+#For a tighter list use jq to get the name, id and state.
+
+#curl -s -k \
+#  -H "Authorization: Bearer $token" \
+#  "https://192.168.4.230/api/v4/grid/ilm-policies" |
+#jq '.data[] | {name, id, active}'
