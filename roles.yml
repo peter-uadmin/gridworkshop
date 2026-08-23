@@ -1,0 +1,13 @@
+---
+- name: List StorageGRID tenants
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - global_vars.yml
+
+  roles:
+    - grid_token
+    - list_tenants
+

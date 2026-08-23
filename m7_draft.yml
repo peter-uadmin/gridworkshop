@@ -1,0 +1,56 @@
+---
+- name: Create StorageGRID ILM policy
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  collections:
+    - netapp.storagegrid
+
+  vars:
+    sg_api_url: "https://192.168.4.230"
+    sg_username: "root"
+    sg_password: "Netapp1!"
+    sg_validate_certs: false
+
+    # ILM policy parameters
+    ilm_policy_name: "ANSIBLE_POLICY_1"
+    ilm_policy_description: "ILM policy created by Ansible"
+    ilm_policy_state: "present"      # present / absent
+    ilm_policy_active: false         # true to activate
+    ilm_policy_default: false        # true if this is the default policy
+    ilm_policy_rules:
+      - "EC_3_COPIES"
+      - "REPL_2_SITES"
+    ilm_policy_tenant_accounts: []
+    ilm_policy_tags: []
+
+  tasks:
+    - name: Get StorageGRID auth token
+      uri:
+        url: "{{ sg_api_url }}/api/v3/authorize"
+        method: POST
+        body_format: json
+        body:
+          username: "{{ sg_username }}"
+          password: "{{ sg_password }}"
+        validate_certs: "{{ sg_validate_certs }}"
+      register: sg_auth
+
+    - name: Set auth token fact
+      set_fact:
+        sg_auth_token: "{{ sg_auth.json.data }}"
+
+    - name: Create or update ILM policy
+      netapp.storagegrid.na_sg_grid_ilm_policy:
+        api_url: "{{ sg_api_url }}"
+        auth_token: "{{ sg_auth_token }}"
+        validate_certs: "{{ sg_validate_certs }}"
+        state: "{{ ilm_policy_state }}"
+        name: "{{ ilm_policy_name }}"
+        description: "{{ ilm_policy_description }}"
+        active: "{{ ilm_policy_active }}"
+        is_default: "{{ ilm_policy_default }}"
+        rules: "{{ ilm_policy_rules }}"
+        tenant_accounts: "{{ ilm_policy_tenant_accounts }}"
+        tags: "{{ ilm_policy_tags }}"

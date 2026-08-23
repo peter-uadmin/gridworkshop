@@ -11,7 +11,7 @@
 
   vars_prompt:
     - name: tenant_id
-      default: ------- 
+      default: 18815655567777745228 
       prompt: tenant_id
       private: false
     - name: sg_group_display_name
@@ -32,7 +32,7 @@
       private: true
 
   roles:
-    - tenant_token
+    - tenant_auth
 
   tasks:
     - name: Ensure full-S3-access group exists
@@ -58,4 +58,5 @@
         # NOTE: module expects valid JSON; give it as a JSON string
         s3_policy: >
           {"Statement":[{"Effect":"Allow","Action":"s3:*","Resource":"arn:aws:s3:::*"}]}
+
 
